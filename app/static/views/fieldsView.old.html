@@ -1,0 +1,166 @@
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th width="25%">
+                Name
+            </th>
+            <th width="15%">
+                Score
+            </th>
+            <th width="20%">
+                Data
+            </th>
+            <th width="9%">
+                Actions
+            </th>
+        </tr>
+        </thead>
+    </table>
+    <div ng-repeat="scenario in currentScenario">
+        <div ng-hide="closeRoot">
+            <div ng-include="'scenarioView'">
+            </div>
+        </div>
+    </div>
+    <script type="text/ng-template" id="scenarioView">
+        <div class="row" title="/{[ scenario.rootName ]}">
+            <div class="large-14 small-28 columns">
+                <a>
+                    <i ng-class="{'fa fa-plus-circle': closeRoot,  'fa fa-minus-circle': !closeRoot}"
+                       ng-click="closeRoot = !closeRoot">
+                    </i>
+                </a>
+                {[ scenario.rootName ]}
+            </div>
+            <div class="large-1 small-2 columns">
+                <div class="btn-group" ng-class="{open: openRoot}">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='openRoot=!openRoot'>
+                        <span class="fa fa-ellipsis-h">
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu" style="left: -120;">
+                        <li>
+                            <a class="no-border" title="add group"
+                               ng-click="openModal('addGroup', group); openRoot=!openRoot">
+                                <i class="fa fa-plus"></i>
+                                Add new group
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+            </div>
+        </div>
+        <br/><!-- line break to give some space between groups -->
+        <div ng-hide="closeRoot && !$parent.expandAll" ng-repeat="field in scenario.fields" ng-include="'fieldView'">
+        </div>
+        <div ng-hide="closeRoot" ng-repeat="group in scenario.groups" ng-include="'groupView'">
+        </div>
+    </script>
+    <script type="text/ng-template" id="groupView">
+        <div class="row" title="{[ group.fullXpath ]}">
+            <div class="large-14 small-28 columns">
+                <a>
+                    <i ng-class="{'fa fa-plus-circle': expandedGroup,  'fa fa-minus-circle': !expandedGroup}"
+                       ng-click="expandedGroup = !expandedGroup">
+                    </i>
+                </a>
+                {[ group.groupName ]}
+            </div>
+            <div class="large-1 small-2 columns">
+                <div class="btn-group" ng-class="{open: openGroup}">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='openGroup=!openGroup'><span
+                            class="fa fa-ellipsis-h"></span></button>
+                    <ul class="dropdown-menu" style="left: -120;">
+                        <li>
+                            <a class="no-border" title="add field"
+                               ng-click="openModal('addField', group); openGroup=!openGroup">
+                                <i class="fa fa-plus"></i>
+                                Add new field
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="no-border" title="add group"
+                               ng-click="openModal('addGroup', group); openGroup=!openGroup">
+                                <i class="fa fa-plus"></i>
+                                Add new group
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="edit group"
+                               ng-click="openModal('editGroup', group); openGroup=!openGroup">
+                                <i class="fa fa-edit"></i>
+                                Edit group
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="delete group"
+                               ng-click="openModal('removeGroup', group); openGroup=!openGroup">
+                                <i class="fa fa-trash-o"></i>
+                                Delete group
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+            </div>
+        </div>
+        <div ng-hide="$parent.expandedGroup" ng-repeat="field in group.fields" ng-include="'fieldView'">
+        </div>
+        <br/>
+    </script>
+    <script type="text/ng-template" id="fieldView">
+        <div class="row" ng-hide="$parent.expandedGroup" title="{[ field.fullXpath ]}">
+            <div class="large-6 small-12 columns">
+                {[ field.fieldName ]}
+            </div>
+            <div class="large-3 small-6 columns">
+                {[ field.score ]}
+            </div>
+            <div class="large-5 small-10 columns">
+                {[ field.data ]}
+            </div>
+            <div class=" large-1 small-2 columns">
+                <div class="btn-group" ng-class="{open: openField}">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown"
+                            ng-click='openField=!openField'>
+                    <span
+                            class="fa fa-ellipsis-h">
+                    </span>
+                    </button>
+                    <ul class="dropdown-menu" style="left: -120;">
+                        <li>
+                            <a class="no-border" title="edit field"
+                               ng-click="openModal('editField', field); openField=!openField">
+                                <i class="fa fa-edit">
+                                    Edit field
+                                </i>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="delete field"
+                               ng-click="openModal('removeField', field); openField=!openField">
+                                <i class="fa fa-trash-o">
+                                    Delete field
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+            </div>
+        </div>
+    </script>
+</div>
+<span class="txt-center" ng-hide="selectedScenario != ''">
+    <h2>Select a scenario to see groups and fields</h2>
+</span>
+<span class="txt-center"
+      ng-show="selectedScenario != '' && currentScenario.groups == '' && currentScenario.fields == ''">
+    <h2>The selected scenario does not have any fields</h2>
+</span>

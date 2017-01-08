@@ -1,0 +1,6 @@
+app/ALL_UPLOADS
+app/SCHEMAS
+.idea
+*.xml
+tests
+app/static/bower_components

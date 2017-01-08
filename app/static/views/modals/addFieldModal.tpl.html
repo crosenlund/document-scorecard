@@ -1,0 +1,48 @@
+<div id="create-field-modal" class="reveal-modal open" data-reveal tabindex="0" aria-hidden="false"
+     style="display: block; opacity: 1; visibility: visible; top: 100px; max-height: 500px">
+    <header class="modal-title">
+        Create a field
+    </header>
+    Adding a new field to {[ scenario.groupName ]}
+    <ul class="fa-ul">
+        <li>
+            <div>
+                <label class="required">
+                    Name
+                    <input type="text" autofocus placeHolder="enter a new name..." ng-model="newScenario.fieldName">
+                </label>
+            </div>
+            <div>
+                <label class="required">
+                    Score
+                    <input type="number" placeHolder="enter a score..." ng-model="newScenario.score">
+                </label>
+                <label ng-show="newScenario.score && (newScenario.score > 5 || newScenario.score < 1)">
+                    Score must be in the range 1 - 5
+                </label>
+            </div>
+            <div>
+                <label>
+                    Data
+                    <input type="text" placeHolder="enter new data..." ng-model="newScenario.data">
+                </label>
+            </div>
+            <span>
+                <input id="checkbox-{[ scenario.notEqual ]}" type="checkbox" ng-model="newScenario.notEqual">
+                <label for="checkbox-{[ scenario.notEqual ]}">Data not equal to</label>
+            </span>
+        </li>
+    </ul>
+    <ul class="form-actions">
+        <li>
+            <button class="button" ng-click="cancelModal()">Cancel</button>
+        </li>
+        <li>
+            <button class="confirm" ng-click="closeModal()"
+                    ng-disabled="!newScenario.fieldName || !newScenario.score || (newScenario.score > 5 || newScenario.score < 1)">
+                Finish
+            </button>
+        </li>
+    </ul>
+    <a class="close-reveal-modal" ng-click="cancelModal()">x</a>
+</div>

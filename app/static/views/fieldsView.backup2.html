@@ -1,0 +1,122 @@
+<div>
+    <div ng-repeat="scenario in currentScenario">
+        <table ng-hide="closeRoot">
+            <thead>
+            <tr>
+                <th width="55%" class="sortable" ng-click="fieldSortColumn = 'name'"
+                    ng-class="{active: fieldSortColumn == 'name'}">
+                    Name
+                </th>
+                <th width="15%" class="sortable" ng-click="fieldSortColumn = 'data'"
+                    ng-class="{active: fieldSortColumn == 'data'}">
+                    Data
+                </th>
+                <th width="7%" class="sortable" ng-click="fieldSortColumn = 'score'"
+                    ng-class="{active: fieldSortColumn == 'score'}">
+                    Score
+                </th>
+                <th width="8%" class="txt-right">
+                    Actions
+                </th>
+            </tr>
+            </thead>
+            <tbody ng-include="'scenarioView'">
+            </tbody>
+        </table>
+    </div>
+    <script type="text/ng-template" id="scenarioView">
+        <tr>
+            <a>
+                <i ng-class="{'fa fa-plus-circle fa-lg': closeRoot,  'fa fa-minus-circle fa-lg': !closeRoot}"
+                   ng-click="closeRoot = !closeRoot">
+                    {[ scenario.rootName ]}--{[ scenario ]}--{[ rootName ]}
+                </i>
+            </a>
+        </tr>
+        {[ scenario.fields ]}
+        <tr ng-repeat="field in scenario.fields" ng-include="'fieldView'">
+        </tr>
+        {[ scenario.groups ]}
+        <tr ng-if="scenario.groups" ng-repeat="group in scenario.groups" ng-include="'groupView'">
+        </tr>
+    </script>
+    <script type="text/ng-template" id="groupView">
+        <tr ng-if="group">
+            <td>
+                <a>
+                    <i ng-class="{'fa fa-plus-circle fa-lg': expandedGroup,  'fa fa-minus-circle fa-lg': !expandedGroup}"
+                       ng-click="expandedGroup = !expandedGroup">
+                        {[ group.groupName ]}
+                    </i>
+                </a>
+            </td>
+            <td>--</td>
+            <td>--</td>
+            <td>
+                <div class="btn-group" ng-class="{open: open}">
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='open=!open'><span
+                            class="fa fa-ellipsis-h"></span></button>
+                    <ul class="dropdown-menu" style="left: -120;">
+                        <li>
+                            <a class="no-border" title="add field" ng-click="openModal('addField', group)">
+                                <i class="fa fa-plus"></i>
+                                Add new field
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="no-border" title="add group" ng-click="openModal('addGroup', group)">
+                                <i class="fa fa-plus"></i>
+                                Add new group
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="edit group" ng-click="openModal('editGroup', group)">
+                                <i class="fa fa-edit"></i>
+                                Edit group
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="delete group" ng-click="openModal('removeGroup', group)">
+                                <i class="fa fa-trash-o"></i>
+                                Delete group
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+            <td class="table" ng-show="expandedGroup">
+            <td ng-repeat="field in group.fields | filter: fieldFilter.filter | orderBy: fieldSortColumn"
+                ng-include="'fieldView'">
+            </td>
+        </tr>
+    </script>
+    <script type="text/ng-template" id="fieldView">
+        <td>{[ field.fieldName ]}</td>
+        <td>{[ field.data ]}</td>
+        <td>{[ field.score ]}</td>
+        <td class="actions txt-right">
+            <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='open=!open'><span
+                    class="fa fa-ellipsis-h"></span></button>
+            <ul class="dropdown-menu" style="left: -120;">
+                <li>
+                    <a class="no-border" title="edit field" ng-click="openModal('editField', field)">
+                        <i class="fa fa-edit fa-lg"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="no-border" title="delete field" ng-click="openModal('removeField', field)">
+                        <i class="fa fa-trash-o fa-lg"></i>
+                    </a>
+                </li>
+            </ul>
+        </td>
+    </script>
+</div>
+<span class="txt-center" ng-hide="selectedScenario != ''">
+    <h2>Select a scenario to see groups and fields</h2>
+</span>
+<span class="txt-center"
+      ng-show="selectedScenario != '' && currentScenario.groups == '' && currentScenario.fields == ''">
+    <h2>The selected scenario does not have any fields</h2>
+</span>
