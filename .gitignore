@@ -1,6 +1,9 @@
 app/ALL_UPLOADS
 app/SCHEMAS
+app/SCHEMA_LAYOUTS/*.py
+!app/SCHEMA_LAYOUTS/__init__.py
 .idea
 *.xml
 tests
 app/static/bower_components
+/sh.exe.stackdump

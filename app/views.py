@@ -1,7 +1,7 @@
 # from application.app import scenarios, app, parse, creator, utils
 import os
 import logging
-from app import app, scenarios, utils, parse, creator, schemaValidation, schemaOrder
+from app import app, scenarios, utilities, parse, creator, schemaUtilities
 from flask import render_template, redirect, url_for, request, make_response, Response, json
 from werkzeug import secure_filename
 import time
@@ -33,7 +33,7 @@ def upload_new_scenario():
         is_valid = False
 
         if file:
-            if utils.file_allowed(file.filename):
+            if utilities.file_allowed(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 scenario_data, new_error = parse.new_scenario(app.config['UPLOAD_FOLDER'] + '/' + filename)
@@ -142,7 +142,9 @@ def get_scenario_xml():
         xml_string, error = scenarios.to_xml(scen_id)
         with open(app.config['APP_FOLDER'] + '/output.xml', 'wb') as w:
             w.write(xml_string)
-        xml_string = schemaOrder.order.order_xml(app.config['APP_FOLDER'] + '/output.xml', schema)
+
+        if schema is not None:
+            schemaUtilities.order_xml(app.config['APP_FOLDER'] + '/output.xml', schema)
 
         with open(app.config['APP_FOLDER'] + '/output.xml', 'r') as r:
             xml_string = r.read()
@@ -157,10 +159,9 @@ def get_scenario_xml():
 
 
 # --------------------SCHEMA VALIDATION------------------------------------------
-# function to check whether the uploaded schema has a valid '.xsd' file extension
 @app.route('/get_schema_list', methods=['GET'])
 def get_schema_list():
-    return json.dumps(schemaValidation.validate.get_schema_list())
+    return json.dumps(schemaUtilities.get_schema_list())
 
 
 @app.route('/add_schema', methods=['POST'])
@@ -172,7 +173,7 @@ def add_schema():
         error = ''
         if file:
             # if this is empty, schema was successfully added
-            error = schemaValidation.validate.add_schema(file, schema_name)
+            error = schemaUtilities.add_schema(file, schema_name)
         else:
             error = "A schema must be upload."
         if len(error) > 0:
@@ -184,7 +185,7 @@ def add_schema():
 def delete_schema():
     filename = request.json['delete']
     # if this is empty, schema was successfully deleted
-    error = schemaValidation.validate.delete_schema(filename)
+    error = schemaUtilities.delete_schema(filename)
     if len(error) > 0:
         return make_response(error, 400)
     return get_schema_list()

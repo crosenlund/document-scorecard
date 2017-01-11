@@ -2,22 +2,22 @@
 # -*- coding: utf-8 -*-
 
 #
-# Generated Fri Jan  6 15:04:32 2017 by generateDS.py version 2.22a.
+# Generated Sun Jan  8 18:08:02 2017 by generateDS.py version 2.22a.
 #
 # Command line options:
 #   ('-f', '')
-#   ('-o', 'app/schemasLayout.py')
-#   ('-s', 'schema.py')
-#   ('--super', 'schemasLayout')
+#   ('-o', 'app/SCHEMA_LAYOUTS/ire-7-7.py')
+#   ('-s', 'ItemRegistry.py')
+#   ('--super', 'ItemRegistries')
 #
 # Command line arguments:
 #   app/SCHEMAS/ire-7.7.xsd
 #
 # Command line:
-#   generateDS/generateDS.py -f -o "app/schemasLayout.py" -s "schema.py" --super="schemasLayout" app/SCHEMAS/ire-7.7.xsd
+#   generateDS/generateDS.py -f -o "app/SCHEMA_LAYOUTS/ire-7-7.py" -s "ItemRegistry.py" --super="ItemRegistries" app/SCHEMAS/ire-7.7.xsd
 #
 # Current working directory (os.getcwd()):
-#   sandbox
+#   document-scorecard-v2
 #
 
 import sys
@@ -817,12 +817,12 @@ class ItemRegistryType(GeneratedsSuper):
 class attributes_string(GeneratedsSuper):
     subclass = None
     superclass = None
-    def __init__(self, requires_others=None, requires_one=None, not_equal=None, qualified_rep=None, score=None, valueOf_=None):
+    def __init__(self, not_equal=None, requires_one=None, qualified_rep=None, requires_others=None, score=None, valueOf_=None):
         self.original_tagname_ = None
-        self.requires_others = _cast(None, requires_others)
-        self.requires_one = _cast(None, requires_one)
         self.not_equal = _cast(None, not_equal)
+        self.requires_one = _cast(None, requires_one)
         self.qualified_rep = _cast(None, qualified_rep)
+        self.requires_others = _cast(None, requires_others)
         self.score = _cast(int, score)
         self.valueOf_ = valueOf_
     def factory(*args_, **kwargs_):
@@ -836,14 +836,14 @@ class attributes_string(GeneratedsSuper):
         else:
             return attributes_string(*args_, **kwargs_)
     factory = staticmethod(factory)
-    def get_requires_others(self): return self.requires_others
-    def set_requires_others(self, requires_others): self.requires_others = requires_others
-    def get_requires_one(self): return self.requires_one
-    def set_requires_one(self, requires_one): self.requires_one = requires_one
     def get_not_equal(self): return self.not_equal
     def set_not_equal(self, not_equal): self.not_equal = not_equal
+    def get_requires_one(self): return self.requires_one
+    def set_requires_one(self, requires_one): self.requires_one = requires_one
     def get_qualified_rep(self): return self.qualified_rep
     def set_qualified_rep(self, qualified_rep): self.qualified_rep = qualified_rep
+    def get_requires_others(self): return self.requires_others
+    def set_requires_others(self, requires_others): self.requires_others = requires_others
     def get_score(self): return self.score
     def set_score(self, score): self.score = score
     def get_valueOf_(self): return self.valueOf_
@@ -874,18 +874,18 @@ class attributes_string(GeneratedsSuper):
         else:
             outfile.write('/>%s' % (eol_, ))
     def exportAttributes(self, outfile, level, already_processed, namespace_='', name_='attributes-string'):
-        if self.requires_others is not None and 'requires_others' not in already_processed:
-            already_processed.add('requires_others')
-            outfile.write(' requires-others=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.requires_others), input_name='requires-others')), ))
-        if self.requires_one is not None and 'requires_one' not in already_processed:
-            already_processed.add('requires_one')
-            outfile.write(' requires-one=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.requires_one), input_name='requires-one')), ))
         if self.not_equal is not None and 'not_equal' not in already_processed:
             already_processed.add('not_equal')
             outfile.write(' not-equal=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.not_equal), input_name='not-equal')), ))
+        if self.requires_one is not None and 'requires_one' not in already_processed:
+            already_processed.add('requires_one')
+            outfile.write(' requires-one=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.requires_one), input_name='requires-one')), ))
         if self.qualified_rep is not None and 'qualified_rep' not in already_processed:
             already_processed.add('qualified_rep')
             outfile.write(' qualified-rep=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.qualified_rep), input_name='qualified-rep')), ))
+        if self.requires_others is not None and 'requires_others' not in already_processed:
+            already_processed.add('requires_others')
+            outfile.write(' requires-others=%s' % (self.gds_encode(self.gds_format_string(quote_attrib(self.requires_others), input_name='requires-others')), ))
         if self.score is not None and 'score' not in already_processed:
             already_processed.add('score')
             outfile.write(' score="%s"' % self.gds_format_integer(self.score, input_name='score'))
@@ -900,22 +900,22 @@ class attributes_string(GeneratedsSuper):
             self.buildChildren(child, node, nodeName_)
         return self
     def buildAttributes(self, node, attrs, already_processed):
-        value = find_attr_value_('requires-others', node)
-        if value is not None and 'requires-others' not in already_processed:
-            already_processed.add('requires-others')
-            self.requires_others = value
-        value = find_attr_value_('requires-one', node)
-        if value is not None and 'requires-one' not in already_processed:
-            already_processed.add('requires-one')
-            self.requires_one = value
         value = find_attr_value_('not-equal', node)
         if value is not None and 'not-equal' not in already_processed:
             already_processed.add('not-equal')
             self.not_equal = value
+        value = find_attr_value_('requires-one', node)
+        if value is not None and 'requires-one' not in already_processed:
+            already_processed.add('requires-one')
+            self.requires_one = value
         value = find_attr_value_('qualified-rep', node)
         if value is not None and 'qualified-rep' not in already_processed:
             already_processed.add('qualified-rep')
             self.qualified_rep = value
+        value = find_attr_value_('requires-others', node)
+        if value is not None and 'requires-others' not in already_processed:
+            already_processed.add('requires-others')
+            self.requires_others = value
         value = find_attr_value_('score', node)
         if value is not None and 'score' not in already_processed:
             already_processed.add('score')
@@ -12244,8 +12244,8 @@ def parseLiteral(inFileName, silence=False):
     # Enable Python to collect the space used by the DOM.
     doc = None
     if not silence:
-        sys.stdout.write('#from schemasLayout import *\n\n')
-        sys.stdout.write('import schemasLayout as model_\n\n')
+        sys.stdout.write('#from ire-7.7 import *\n\n')
+        sys.stdout.write('import ire-7.7 as model_\n\n')
         sys.stdout.write('rootObj = model_.rootClass(\n')
         rootObj.exportLiteral(sys.stdout, 0, name_=rootTag)
         sys.stdout.write(')\n')
