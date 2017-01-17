@@ -11,9 +11,6 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     $scope.reverse = true;
     $scope.fd = new FormData();
 
-    console.log($scope.scenariosTestList);
-    console.log($scope.fileUploaded);
-
     //hide buttons and columns for this view
     $scope.hideRemove = true;
     $scope.hideCopy = true;
@@ -43,6 +40,8 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
                     return '';
                 }, action: function () {
                     return '';
+                }, schemas: function () {
+                    return '';
                 }
             }
         })
@@ -54,11 +53,13 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
             });
     };
 
-    $scope.compareAndDownload = function () {
+    $scope.compareAndDownload = function (validateData, validateSchema) {
         //add list of scenarios in the testList for the db call
         console.log($scope.scenariosTestList);
         var jsonData = (JSON.stringify({
-            testList: $scope.testList
+            testList: $scope.testList,
+            validateData: validateData,
+            validateSchema: validateSchema
         }));
         $scope.fd.append("data", jsonData);
 
@@ -77,6 +78,7 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     $scope.downloadScenario = function (scenario) {
         var scenarioName = (JSON.stringify({
             name: scenario.name,
+            id: scenario.scenId,
             schema: scenario.schema
         }));
         scenariosFactory.downloadScenario(scenarioName).success(function (data) {
@@ -112,7 +114,6 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     };
 
     $scope.addToList = function (scenario) {
-        console.log(scenario);
         //make sure a scenario is selected
         if (scenario != null) {
             //check if the selected scenario is already in the test list, if not add to it. If it is then ignore

@@ -88,7 +88,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         newGroupName: result.scenario.newGroupName,
                         groupID: result.scenario.groupId
                     }));
-                }else { // gives all data in the jsonData object
+                } else { // gives all data in the jsonData object
                     jsonData = (JSON.stringify({
                         //----------SCENARIO-------------------------------
                         name: result.scenario.name,

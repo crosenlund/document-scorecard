@@ -46,7 +46,7 @@
                 <ul class="dropdown-menu" style="left: -120;">
                     <li>
                         <a class="no-border" title="download scenario" ng-hide="hideDownload"
-                           ng-click="downloadScenario(scenario)">
+                           ng-click="downloadScenario(scenario); open = False">
                             <i class="fa fa-cloud-download fa-lg"></i>
                             Download scenario
                         </a>
@@ -54,28 +54,28 @@
                     <li class="divider"></li>
                     <li>
                         <a class="no-border" title="edit scenario info" ng-hide="hideEdit"
-                           ng-click="openModal('edit', scenario)">
+                           ng-click="openModal('edit', scenario); open = False">
                             <i class="fa fa-edit fa-lg"></i>
                             Edit scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="copy scenario" ng-hide="hideCopy"
-                           ng-click="openModal('copy', scenario)">
+                           ng-click="openModal('copy', scenario); open = False">
                             <i class="fa fa-copy fa-lg"></i>
                             Copy scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="delete scenario" ng-hide="hideRemove"
-                           ng-click="openModal('delete', scenario)">
+                           ng-click="openModal('delete', scenario); open = False">
                             <i class="fa fa-trash-o fa-lg"></i>
                             Delete scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="add scenario to test" ng-hide="hideAddTest"
-                           ng-click="addToList(scenario)">
+                           ng-click="addToList(scenario); open = False">
                             <i class="fa fa-level-up fa-lg fa-rotate-90"></i>
                         </a>
                     </li>

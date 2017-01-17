@@ -1,7 +1,7 @@
 # from application.app import scenarios, app, parse, creator, utils
 import os
 import logging
-from app import app, scenarios, utilities, parse, creator, schemaUtilities
+from app import app, scenarios, utilities, parse, creator, schemaUtilities, output, compare
 from flask import render_template, redirect, url_for, request, make_response, Response, json
 from werkzeug import secure_filename
 import time
@@ -139,23 +139,55 @@ def get_scenario_xml():
         scen_id = request.json['id']
         scen_name = request.json['name']
         schema = request.json['schema']
+        # validate_to_schema = request.json['validateSchema']
+        validate_to_schema = True
         xml_string, error = scenarios.to_xml(scen_id)
+        print(xml_string)
         with open(app.config['APP_FOLDER'] + '/output.xml', 'wb') as w:
             w.write(xml_string)
 
-        if schema is not None:
+        if schema is not None and validate_to_schema:
             schemaUtilities.order_xml(app.config['APP_FOLDER'] + '/output.xml', schema)
 
         with open(app.config['APP_FOLDER'] + '/output.xml', 'r') as r:
             xml_string = r.read()
+            print(xml_string)
         print('get_scenario_xml took %s seconds' % (time.time() - start_time))
         if error:
             response = make_response(error, 400)
             return response
         else:
             response = make_response(xml_string)
-            response.headers["Content-Disposition"] = "attachment;filename=%s.txt" % scen_name
+            response.headers["Content-Disposition"] = "attachment;filename=%s.xml" % scen_name
             return response
+
+
+@app.route('/compare_download', methods=['POST'])
+def compare_download():
+    start_time = time.time()
+    if request.method == 'POST':
+        files = []
+        for file in request.files.getlist("file"):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            files.append(filename)
+        data = json.loads(request.form['data'])
+        selected_list = data['testList']
+        validate_to_schema = data['validateSchema']
+        validate_to_data = data['validateData']
+        scenarios_list = selected_list.split(',')
+        error = ''
+
+        if files and selected_list:
+            compare.compare(files, scenarios_list, validate_to_data, validate_to_schema)
+        else:
+            response = make_response("Unable to find files and/or scenarios selected", 400)
+            return response
+
+        response = make_response("compare and download output", 200)
+        # response = make_response(scenarios_list)
+        # response.headers["Content-Disposition"] = "attachment;filename=%s.txt" % scen_name
+        return response
 
 
 # --------------------SCHEMA VALIDATION------------------------------------------

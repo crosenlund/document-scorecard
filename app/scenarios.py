@@ -258,6 +258,15 @@ def get_all_scenarios():
     return scens
 
 
+# return the id of a scenario when given the name
+def get_id(name):
+    cur, conn = connect_to_db()
+    cur.execute("SELECT id FROM scenarios WHERE name = '" + name + "'")
+
+    row = cur.fetchone()[0]
+
+    return row
+
 # get the scenarios info
 def get_info(id):
     cur, conn = connect_to_db()
@@ -295,6 +304,31 @@ def to_xml(id):
     print("---to_xml finished in %s seconds ---" % (time.time() - start_time))
     if 'root_node' in locals():
         return etree.tostring(root_node, pretty_print=True), ''
+    else:
+        return [], 'Unable to retrieve the selected scenario. Please try again or report an issue.'
+
+
+# return a scenario as json, uses methods build_fields and build_fields
+def to_element_tree(id):
+    start_time = time.time()
+    print("---to_xml started %s  ---" % start_time)
+
+    cur, conn = connect_to_db()
+    if existing_scenario(id, None):
+        cur.execute("SELECT * FROM scenarios where id = '" + str(id) + "'")
+
+        row = cur.fetchone()
+
+        root_name = row[6]
+        root_node = etree.Element(root_name)
+        root_node = (build_fields_xml(cur, id, root_node, False))
+        root_node = (build_groups_xml(cur, id, root_node, False))
+
+        close(cur, conn)
+
+    print("---to_xml finished in %s seconds ---" % (time.time() - start_time))
+    if 'etree' in locals():
+        return etree, ''
     else:
         return [], 'Unable to retrieve the selected scenario. Please try again or report an issue.'
 

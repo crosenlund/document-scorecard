@@ -1,5 +1,6 @@
 from lxml.etree import XMLSyntaxError
 from lxml import etree
+import re
 
 
 # returns json data of a parsed xml file
@@ -116,3 +117,30 @@ def build_field(node):
             attribute_string = attr + '==' + node.attrib[attr]
 
     return {'name': name, 'score': score, 'data': data, 'attributes': attribute_string}
+
+
+def input(file_name):
+    xpath_list = {}
+    empty_nodes = []
+    xml = open(file_name)
+    parser = etree.XMLParser(ns_clean=True)
+    try:
+        tree = etree.parse(xml, parser)
+
+    except XMLSyntaxError:
+        return "Error", "There was a problem parsing %s." % file_name
+    xml.close()
+    etree.tostring(tree.getroot())
+
+    for node in tree.iter():
+        if len(node) < 1:
+            if node.text is not None:
+                xpath = re.sub("\[\d*\]", "", tree.getpath(node))
+                if xpath not in xpath_list.keys():
+                    xpath_list[xpath] = [node.text]
+                else:
+                    xpath_list[xpath].append(node.text)
+            else:
+                empty_nodes.append(re.sub("\[\d*\]", "", tree.getpath(node)))
+                # print("input parse %s - %s" % (tree.getpath(node), node.text))
+    return xpath_list, empty_nodes, tree
