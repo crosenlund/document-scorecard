@@ -445,19 +445,19 @@ def build_groups_json(cur, id, group_fields):
         groups_built = build_groups_json(cur, group_id, True)
         if fields_built:
             if groups_built:
-                group_list.append({"group_id": group_info[0], "name": group_info[1], "qualifier": group_info[2],
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
                                    "qualifier_field": group_info[3], "groups": groups_built,
                                    "fields": fields_built})
             if not groups_built:
-                group_list.append({"group_id": group_info[0], "name": group_info[1], "qualifier": group_info[2],
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
                                    "qualifier_field": group_info[3], "fields": fields_built})
 
         if not fields_built:
             if groups_built:
-                group_list.append({"group_id": group_info[0], "name": group_info[1], "qualifier": group_info[2],
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
                                    "qualifier_field": group_info[3], "groups": groups_built})
             if not groups_built:
-                group_list.append({"group_id": group_info[0], "name": group_info[1], "qualifier": group_info[2],
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
                                    "qualifier_field": group_info[3]})
 
     return group_list
@@ -481,7 +481,7 @@ def build_fields_json(cur, id, group_field):
             "SELECT * FROM fields WHERE id = '" + str(field_id) + "';")
         field_info = cur.fetchone()
         field_list.append(
-            {"field_id": field_info[0], "name": field_info[1], "score": field_info[2], "data": field_info[3],
+            {"fieldId": field_info[0], "name": field_info[1], "score": field_info[2], "data": field_info[3],
              "not_equal": field_info[4]})
 
     return field_list

@@ -1,82 +1,75 @@
 <div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th width="25%">
-                Name
-            </th>
-            <th width="15%">
-                Score
-            </th>
-            <th width="20%">
-                Data
-            </th>
-            <th width="9%">
-                Actions
-            </th>
-        </tr>
-        </thead>
-    </table>
     <div ng-repeat="scenario in currentScenario">
-        <div ng-hide="closeRoot">
+        <div class="scenario-tree" ng-hide="closeRoot">
             <div ng-include="'scenarioView'">
             </div>
         </div>
     </div>
     <script type="text/ng-template" id="scenarioView">
-        <div class="row" title="/{[ scenario.rootName ]}">
-            <div class="large-14 small-28 columns">
-                <a>
-                    <i ng-class="{'fa fa-plus-circle': closeRoot,  'fa fa-minus-circle': !closeRoot}"
-                       ng-click="closeRoot = !closeRoot">
-                    </i>
-                </a>
-                {[ scenario.rootName ]}
-            </div>
-            <div class="large-1 small-2 columns">
-                <div class="btn-group" ng-class="{open: openRoot}">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='openRoot=!openRoot'>
+        <div class="tree-node" title="{[ scenario.rootName ]}">
+            <div class="tree-node-container">
+                <div ng-click="scenario.closeRoot = !scenario.closeRoot">
+                    <div class="icon-container">
+                        <i class="node-icon"
+                           ng-class="{'fa fa-folder': scenario.closeRoot, 'fa fa-folder-open-o': !scenario.groups && !scenario.fields,  'fa fa-folder-open': !scenario.closeRoot}">
+                        </i>
+                    </div>
+                    <div class="node-label">
+                        {[ scenario.rootName ]}
+                    </div>
+                </div>
+                <div class="btn-group" ng-class="{open: menuOpen == scenario.rootName + '-' + scenario.scenId }">
+                    <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
+                            ng-click='openMenu(scenario.rootName + "-" + scenario.scenId )'>
                         <span class="fa fa-ellipsis-h">
                         </span>
                     </button>
                     <ul class="dropdown-menu" style="left: -120;">
                         <li>
                             <a class="no-border" title="add group"
-                               ng-click="openModal('addGroup', group); openRoot=!openRoot">
+                               ng-click="openModal('addGroup', scenario); openMenu('')">
                                 <i class="fa fa-plus"></i>
                                 Add new group
+                            </a>
+                        </li>
+                        <li>
+                            <a class="no-border" title="add field"
+                               ng-click="openModal('addField', group); openMenu('')">
+                                <i class="fa fa-plus"></i>
+                                Add new field
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+            <div ng-hide="scenario.closeRoot && !$parent.expandAll" ng-repeat="field in scenario.fields"
+                 ng-include="'fieldView'">
             </div>
-        </div>
-        <br/><!-- line break to give some space between groups -->
-        <div ng-hide="closeRoot && !$parent.expandAll" ng-repeat="field in scenario.fields" ng-include="'fieldView'">
-        </div>
-        <div ng-hide="closeRoot" ng-repeat="group in scenario.groups" ng-include="'groupView'">
+            <div ng-hide="scenario.closeRoot" ng-repeat="group in scenario.groups" ng-include="'groupView'">
+            </div>
         </div>
     </script>
     <script type="text/ng-template" id="groupView">
-        <div class="row" title="{[ group.fullXpath ]}">
-            <div class="large-14 small-28 columns">
-                <a>
-                    <i ng-class="{'fa fa-plus-circle': expandedGroup,  'fa fa-minus-circle': !expandedGroup}"
-                       ng-click="expandedGroup = !expandedGroup">
-                    </i>
-                </a>
-                {[ group.groupName ]}
-            </div>
-            <div class="large-1 small-2 columns">
-                <div class="btn-group" ng-class="{open: openGroup}">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='openGroup=!openGroup'><span
+        <div class="tree-node" title="{[ group.name ]}">
+            <div class="tree-node-container">
+                <div ng-click="group.expandedGroup = !group.expandedGroup">
+                    <div class="icon-container">
+                        <i class="node-icon"
+                           ng-class="{'fa fa-folder': group.expandedGroup, 'fa fa-folder-open-o': !group.groups && !group.fields, 'fa fa-folder-open': !group.expandedGroup}">
+                        </i>
+                    </div>
+                    <div class="node-label">
+                        {[ group.name ]}
+                    </div>
+                </div>
+                <div class="btn-group" ng-class="{open: menuOpen == group.name + '-' + group.groupId}">
+                    <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
+                            ng-click='openMenu(group.name + "-" + group.groupId)'><span
                             class="fa fa-ellipsis-h"></span></button>
                     <ul class="dropdown-menu" style="left: -120;">
                         <li>
                             <a class="no-border" title="add field"
-                               ng-click="openModal('addField', group); openGroup=!openGroup">
+                               ng-click="openModal('addField', group); openMenu('')">
                                 <i class="fa fa-plus"></i>
                                 Add new field
                             </a>
@@ -84,21 +77,21 @@
                         <li class="divider"></li>
                         <li>
                             <a class="no-border" title="add group"
-                               ng-click="openModal('addGroup', group); openGroup=!openGroup">
+                               ng-click="openModal('addGroup', group); openMenu('')">
                                 <i class="fa fa-plus"></i>
                                 Add new group
                             </a>
                         </li>
                         <li>
                             <a class="no-border" title="edit group"
-                               ng-click="openModal('editGroup', group); openGroup=!openGroup">
+                               ng-click="openModal('editGroup', group); openMenu('')">
                                 <i class="fa fa-edit"></i>
                                 Edit group
                             </a>
                         </li>
                         <li>
                             <a class="no-border" title="delete group"
-                               ng-click="openModal('removeGroup', group); openGroup=!openGroup">
+                               ng-click="openModal('removeGroup', group); openMenu('')">
                                 <i class="fa fa-trash-o"></i>
                                 Delete group
                             </a>
@@ -106,53 +99,48 @@
                     </ul>
                 </div>
             </div>
-            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+            <div class="fields-container">
+                <div ng-if="!$parent.group.expandedGroup" ng-repeat="field in group.fields" ng-include="'fieldView'">
+                </div>
+            </div>
+            <div ng-if="!$parent.group.expandedGroup" ng-repeat="group in group.groups" ng-include="'groupView'">
             </div>
         </div>
-        <div ng-hide="$parent.expandedGroup" ng-repeat="field in group.fields" ng-include="'fieldView'">
-        </div>
-        <br/>
     </script>
     <script type="text/ng-template" id="fieldView">
-        <div class="row" ng-hide="$parent.expandedGroup" title="{[ field.fullXpath ]}">
-            <div class="large-6 small-12 columns">
-                {[ field.fieldName ]}
-            </div>
-            <div class="large-3 small-6 columns">
-                {[ field.score ]}
-            </div>
-            <div class="large-5 small-10 columns">
-                {[ field.data ]}
-            </div>
-            <div class=" large-1 small-2 columns">
-                <div class="btn-group" ng-class="{open: openField}">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown"
-                            ng-click='openField=!openField'>
+        <div class="tree-node" ng-hide="$parent.group.expandedGroup" title="{[ field.name ]}">
+            <div class="tree-node-container btn-group" ng-class="{open: menuOpen == field.name + '-' + field.fieldId}">
+                <div class="icon-container">
+                    <i class="node-icon fa fa-file-o">
+                    </i>
+                </div>
+                <div class="node-label">
+                    {[ field.name ]}
+                </div>
+                <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
+                        ng-click='openMenu(field.name + "-" + field.fieldId)'>
                     <span
                             class="fa fa-ellipsis-h">
                     </span>
-                    </button>
-                    <ul class="dropdown-menu" style="left: -120;">
-                        <li>
-                            <a class="no-border" title="edit field"
-                               ng-click="openModal('editField', field); openField=!openField">
-                                <i class="fa fa-edit">
-                                    Edit field
-                                </i>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="no-border" title="delete field"
-                               ng-click="openModal('removeField', field); openField=!openField">
-                                <i class="fa fa-trash-o">
-                                    Delete field
-                                </i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div><!-- This is for filling the rest of the div/row to help push stuff to the left-->
+                </button>
+                <ul class="dropdown-menu" style="left: -120;">
+                    <li>
+                        <a class="no-border" title="edit field"
+                           ng-click="openModal('editField', field); openMenu('')">
+                            <i class="fa fa-edit">
+                                Edit field
+                            </i>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="no-border" title="delete field"
+                           ng-click="openModal('removeField', field); openMenu('')">
+                            <i class="fa fa-trash-o">
+                                Delete field
+                            </i>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </script>

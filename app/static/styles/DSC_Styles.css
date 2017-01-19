@@ -1,5 +1,6 @@
 .modal-open {
-  width:400px; height: 400px;
+    width: 400px;
+    height: 400px;
 }
 
 table {
@@ -9,4 +10,48 @@ table {
     max-height: 275px;
     table-layout: fixed;
     word-wrap: break-word;
+}
+
+.transparent-button {
+    background-color: Transparent;
+    outline: none;
+}
+
+.tree-node {
+    margin-top: 5px;
+    margin-left: 10px;
+    float: left;
+    white-space: nowrap;
+    line-height: 1.5rem;
+}
+
+.tree-node-container:hover {
+    cursor: pointer;
+    color: #FA6423;
+}
+.tree-node-container {
+    display: block;
+}
+
+.scenario-tree {
+    float: left;
+    width: 100%;
+    list-style: none;
+}
+
+.node-label {
+    float: left;
+}
+
+.fields-container {
+    float: left;
+}
+
+.node-icon {
+    color: #000000;
+}
+.icon-container {
+    position: relative;
+    margin-right: 5px;
+    float: left;
 }

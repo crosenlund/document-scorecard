@@ -1,9 +1,6 @@
 angular.module("myApp").factory('groupsFactory', ['$http', function ($http) {
 
     return {
-        getGroupList: function () {
-            return $http.get("get_groups")
-        },
         addGroup: function (scenarioData) {
             return $http.post("add_group", scenarioData)
         },

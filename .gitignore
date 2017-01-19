@@ -6,6 +6,5 @@ app/SCHEMA_LAYOUTS/*.py
 *.xml
 tests
 app/static/bower_components
-*/*.pyc
-app/__pycache__
+__pycache__
 /sh.exe.stackdump

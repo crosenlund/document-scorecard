@@ -84,31 +84,39 @@ def create_group(cur, name, qualifier, qualifying_field):
 # delete a group from the database
 def delete_group(id):
     cur, conn = connect_to_db()
+    success = False
 
     if existing_group(id):
-        cur.execute("DELETE FROM groups WHERE id = '" + id + "';")
+        cur.execute("DELETE FROM groups WHERE id = '" + str(id) + "';")
+        success = True
     else:
         logging.info("The selected group does not exist.")
 
     commit(conn)
     close(cur, conn)
 
+    return success
+
 
 # edit a group's info, make sure the group (by id) exists first
 def edit_group(id, name, qualifier, qualifying_field):
     cur, conn = connect_to_db()
+    success = False
 
     if existing_group(id):
         cur.execute("UPDATE groups SET "
                     "name = '" + name + "', " +
                     "qualifier = '" + qualifier + "', " +
                     "qualifying_field = '" + qualifying_field + "'" +
-                    " where id = " + id + ";")
+                    " where id = " + str(id) + ";")
+        success = True
     else:
         logging.info("The selected group does not exist.")
 
     commit(conn)
     close(cur, conn)
+
+    return success
 
 
 # see if a group exists in the database

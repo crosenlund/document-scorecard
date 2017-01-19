@@ -3,7 +3,7 @@
     <header class="modal-title">
         Create a field
     </header>
-    Adding a new field to {[ scenario.groupName ]}
+    Adding a new field to {[ scenario.name ]} {[ scenario.rootName ]}
     <ul class="fa-ul">
         <li>
             <div>
@@ -17,7 +17,7 @@
                     Score
                     <input type="number" placeHolder="enter a score..." ng-model="newScenario.score">
                 </label>
-                <label ng-show="newScenario.score && (newScenario.score > 5 || newScenario.score < 1)">
+                <label ng-show="newScenario.score && (newScenario.score > 5 || newScenario.score < 1) || newScenario.score == 0">
                     Score must be in the range 1 - 5
                 </label>
             </div>
@@ -39,7 +39,7 @@
         </li>
         <li>
             <button class="confirm" ng-click="closeModal()"
-                    ng-disabled="!newScenario.fieldName || !newScenario.score || (newScenario.score > 5 || newScenario.score < 1)">
+                    ng-disabled="!newScenario.fieldName || !newScenario.score || (newScenario.score > 5 || newScenario.score < 1 || newScenario.score == 0)">
                 Finish
             </button>
         </li>

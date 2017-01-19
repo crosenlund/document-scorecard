@@ -8,6 +8,7 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$s
         $scope.docTypeOptions = ['810', '846', '850', '855', '856'];
         $scope.fulfillmentTypeOptions = ['Bulk Import', 'Drop Ship', 'Multi Store', 'Cross Dock', 'Multiple'];
         console.log(schemas);
+        console.log($scope.scenario)
 
         $scope.closeModal = function () {
             $modalInstance.close({scenario: $scope.newScenario, file: $scope.files, action: action});

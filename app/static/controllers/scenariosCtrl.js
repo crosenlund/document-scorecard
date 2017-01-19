@@ -12,6 +12,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
     $scope.closeRoot = false;
     $scope.expandedGroup = true;
     $scope.notEqual = false;
+    $scope.menuOpen = '';
 
     //hide buttons and columns for this view
     $scope.hideTestButton = true;
@@ -82,11 +83,32 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         //----------SCENARIO-------------------------------
                         name: result.scenario.name,
                         scenID: result.scenario.scenId,
-                        scenID2: $scope.selectedScenario.scenId,
+                        scenID2: $scope.selectedScenario.scenId, // this will be used to return any new json data to repopulate the scenario tree
                         //----------GROUP----------------------------------
                         groupName: result.scenario.groupName,
                         newGroupName: result.scenario.newGroupName,
                         groupID: result.scenario.groupId
+                    }));
+                } else if (action.indexOf('Field') > -1) { //limits the jsonData being sent when performing an action for a field
+                    jsonData = (JSON.stringify({
+                        //----------SCENARIO-------------------------------
+                        name: result.scenario.name,
+                        scenID: result.scenario.scenId,
+                        scenID2: $scope.selectedScenario.scenId,
+                        //----------GROUP----------------------------------
+                        groupName: result.scenario.groupName,
+                        newGroupName: result.scenario.newGroupName,
+                        groupID: result.scenario.groupId,
+                        //----------FIELD----------------------------------
+                        oldFieldName: scenario.name,
+                        oldData: scenario.data,
+                        oldScore: scenario.score,
+                        oldNotEqual: scenario.notEqual,
+                        fieldName: result.scenario.fieldName,
+                        score: result.scenario.score,
+                        data: result.scenario.data,
+                        fieldID: result.scenario.fieldId,
+                        notEqual: result.scenario.notEqual
                     }));
                 } else { // gives all data in the jsonData object
                     jsonData = (JSON.stringify({
@@ -105,21 +127,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         oldDocType: $scope.selectedScenario.doctype,
                         oldFulfillmentType: $scope.selectedScenario.fulfillmenttype,
                         scenID: result.scenario.scenId,
-                        scenID2: $scope.selectedScenario.scenId,
-                        //----------GROUP----------------------------------
-                        groupName: result.scenario.groupName,
-                        newGroupName: result.scenario.newGroupName,
-                        groupID: result.scenario.groupId,
-                        //----------FIELD----------------------------------
-                        oldFieldName: scenario.fieldName,
-                        oldData: scenario.data,
-                        oldScore: scenario.score,
-                        oldNotEqual: scenario.notEqual,
-                        fieldName: result.scenario.fieldName,
-                        score: result.scenario.score,
-                        data: result.scenario.data,
-                        fieldID: result.scenario.fieldId,
-                        notEqual: result.scenario.notEqual
+                        scenID2: $scope.selectedScenario.scenId
                     }));
                 }
 
@@ -301,6 +309,15 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
             $scope.currentScenario = []; // clears field table if no scenario is selected
         }
         console.log($scope.currentScenario);
+    };
+
+    //track which items menu button is open - only one should be open at a time
+    $scope.openMenu = function (name) {
+        if ($scope.menuOpen != name) {
+            $scope.menuOpen = name;
+        } else {//menuOpen == name, so close the menu without opening another
+            $scope.menuOpen = '';
+        }
     };
 
     //schema functionality--------------------------------------------------

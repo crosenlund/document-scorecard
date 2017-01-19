@@ -20,20 +20,6 @@
     </div>
 </div>
 <div class="col-xs-3">
-    <div class="input-group input-group-sm" ng-show="hideExpandCollapse">
-    <span>
-      <button class="button" ng-show="!expandAll" ng-click="expandAll = !expandAll" title="Expand all"
-              ng-disabled="selectedScenario == ''">
-        <i class="fa fa-expand"></i>
-         Expand all
-      </button>
-      <button class="button" ng-show="expandAll" ng-click="expandAll = !expandAll" title="Collapse All"
-              ng-disabled="selectedScenario == ''">
-        <i class="fa fa-compress"></i>
-         Collapse all
-      </button>
-    </span>
-    </div>
     <div class="input-group input-group-sm" ng-hide="hideTestButton">
         <div uib-dropdown is-open="status.isopen">
             <button type="button" class="key" uib-dropdown-toggle

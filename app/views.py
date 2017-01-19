@@ -1,7 +1,7 @@
 # from application.app import scenarios, app, parse, creator, utils
 import os
 import logging
-from app import app, scenarios, utilities, parse, creator, schemaUtilities, output, compare
+from app import app, scenarios, groups, fields, utilities, parse, creator, schemaUtilities, output, compare
 from flask import render_template, redirect, url_for, request, make_response, Response, json
 from werkzeug import secure_filename
 import time
@@ -120,15 +120,22 @@ def get_scenario_json():
         scenario_data = ''
         scen_id = request.json['scenID']
 
-        if scenarios.existing_scenario(scen_id, None):
-            scenario_data, error = scenarios.to_json(scen_id)
-        else:
-            error = "That scenario does not exist."
-        if len(error) < 1:
-            return Response(json.dumps(scenario_data), mimetype='application/json')
-        else:
-            response = make_response(error, 400)
-            return response
+        return scenario_json(scen_id)
+
+
+# returns json of a scenario
+def scenario_json(scen_id):
+    scenario_data = ''
+
+    if scenarios.existing_scenario(scen_id, None):
+        scenario_data, error = scenarios.to_json(scen_id)
+    else:
+        error = "That scenario does not exist."
+    if len(error) < 1:
+        return Response(json.dumps(scenario_data), mimetype='application/json')
+    else:
+        response = make_response(error, 400)
+        return response
 
 
 # returns XML of a scenario
@@ -188,6 +195,125 @@ def compare_download():
         # response = make_response(scenarios_list)
         # response.headers["Content-Disposition"] = "attachment;filename=%s.txt" % scen_name
         return response
+
+
+# --------------------EDITING SCENARIO'S GROUPS AND FIELDS FROM WEBSITE----------
+@app.route('/add_group', methods=['POST'])
+def add_group():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        group_id = ''
+        if 'groupID' in request.json:
+            group_id = request.json['groupID']
+        scen_id = ''
+        if 'scenID' in request.json:
+            scen_id = request.json['scenID']
+        group_name = request.json['newGroupName']
+        qualifier_value = ''
+        if 'qualifier_value' in request.json:
+            qualifier_value = request.json['qualifier_value']
+        qualifier_field = ''
+        if 'qualifier_field' in request.json:
+            qualifier_field = request.json['qualifier_field']
+
+        if scen_id:
+            success = scenarios.add_group(scen_id, group_name, qualifier_value, qualifier_field)
+        elif group_id:
+            success = groups.add_group(group_id, group_name, qualifier_value, qualifier_field)
+
+        if success:
+            logging.info("successfully added group '" + group_name + "' (scenario id = " + str(scen_id) + ", " +
+                         " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response('Unable to add a new group. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/add_field', methods=['POST'])
+def add_field():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        field_name = request.json['fieldName']
+        score = request.json['score']
+        data = request.json['data']
+        notEqual = request.json['notEqual']
+        if 'groupID' in request.json:
+            group_id = request.json['groupID']
+        scen_id = ''
+        if 'scenID' in request.json:
+            scen_id = request.json['scenID']
+        group_name = request.json['newGroupName']
+        qualifier_value = ''
+        if 'qualifier_value' in request.json:
+            qualifier_value = request.json['qualifier_value']
+        qualifier_field = ''
+        if 'qualifier_field' in request.json:
+            qualifier_field = request.json['qualifier_field']
+
+        success = False
+        if scen_id:
+            success = scenarios.add_group(scen_id, group_name, qualifier_value, qualifier_field)
+        elif group_id:
+            success = groups.add_group(group_id, group_name, qualifier_value, qualifier_field)
+
+        if success:
+            logging.info("successfully added group '" + group_name + "' (scenario id = " + str(scen_id) + ", " +
+                         " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response('Unable to add a new group. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/remove_group', methods=['POST'])
+def remove_group():
+    if request.method == 'POST':
+        group_id = request.json['groupID']
+        scen_id_for_json = request.json['scenID2']
+
+        success = groups.delete_group(group_id)
+
+        if success:
+            logging.info("successfully deleted group with id = '" + str(group_id) + "' from scenario with id = '" + str(
+                scen_id_for_json) + "'")
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response(
+                'Unable to remove the group. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/edit_group', methods=['POST'])
+def edit_group():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        group_id = ''
+        if 'groupID' in request.json:
+            group_id = request.json['groupID']
+        group_name = request.json['newGroupName']
+        current_name = request.json['name']
+        qualifier_value = ''
+        if 'qualifier_value' in request.json:
+            qualifier_value = request.json['qualifier_value']
+        qualifier_field = ''
+        if 'qualifier_field' in request.json:
+            qualifier_field = request.json['qualifier_field']
+
+        success = groups.edit_group(group_id, group_name, qualifier_value, qualifier_field)
+
+        if success:
+            logging.info(
+                "successfully edited group with id = '" + str(group_id) + "'(scenario id = " + str(
+                    scen_id_for_json) + ", " + " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response(
+                'Unable to edit the group. If unable to resolve, please report error/bug.', 400)
+            return response
 
 
 # --------------------SCHEMA VALIDATION------------------------------------------
