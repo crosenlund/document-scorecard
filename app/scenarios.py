@@ -37,15 +37,14 @@ def add_field(scen_id, name, score, data, not_equal):
             , (scen_id, None, field_id))
 
     else:
-        logging.info("The selected scenario does not exists (id = " + scen_id + ")")
+        logging.info("The selected scenario does not exists (id = %r)" % scen_id)
 
     commit(conn)
     close(cur, conn)
 
     if field_id is not -1:
-        logging.info("successfully added scenario '" + name + "' (id = " + str(scen_id) + ", " +
-                     " " + name + ", " + score + "," + data + "," +
-                     " " + not_equal + ")")
+        logging.info("successfully added scenario '%r' (id = %r, %r, %r, %r, %r)"
+                     % (name, scen_id, name, score, data, not_equal))
 
     return field_id
 

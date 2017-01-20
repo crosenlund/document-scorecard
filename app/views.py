@@ -231,43 +231,6 @@ def add_group():
             return response
 
 
-@app.route('/add_field', methods=['POST'])
-def add_field():
-    if request.method == 'POST':
-        scen_id_for_json = request.json['scenID2']
-        field_name = request.json['fieldName']
-        score = request.json['score']
-        data = request.json['data']
-        notEqual = request.json['notEqual']
-        if 'groupID' in request.json:
-            group_id = request.json['groupID']
-        scen_id = ''
-        if 'scenID' in request.json:
-            scen_id = request.json['scenID']
-        group_name = request.json['newGroupName']
-        qualifier_value = ''
-        if 'qualifier_value' in request.json:
-            qualifier_value = request.json['qualifier_value']
-        qualifier_field = ''
-        if 'qualifier_field' in request.json:
-            qualifier_field = request.json['qualifier_field']
-
-        success = False
-        if scen_id:
-            success = scenarios.add_group(scen_id, group_name, qualifier_value, qualifier_field)
-        elif group_id:
-            success = groups.add_group(group_id, group_name, qualifier_value, qualifier_field)
-
-        if success:
-            logging.info("successfully added group '" + group_name + "' (scenario id = " + str(scen_id) + ", " +
-                         " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
-
-            return scenario_json(scen_id_for_json)
-        else:
-            response = make_response('Unable to add a new group. If unable to resolve, please report error/bug.', 400)
-            return response
-
-
 @app.route('/remove_group', methods=['POST'])
 def remove_group():
     if request.method == 'POST':
@@ -308,6 +271,86 @@ def edit_group():
             logging.info(
                 "successfully edited group with id = '" + str(group_id) + "'(scenario id = " + str(
                     scen_id_for_json) + ", " + " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response(
+                'Unable to edit the group. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/add_field', methods=['POST'])
+def add_field():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        field_name = request.json['fieldName']
+        score = request.json['score']
+        notEqual = False
+        if 'notEqual' in request.json:
+            notEqual = request.json['notEqual']
+        group_id = ''
+        if 'groupID' in request.json:
+            group_id = request.json['groupID']
+        scen_id = ''
+        if 'scenID' in request.json:
+            scen_id = request.json['scenID']
+        data = ''
+        if 'data' in request.json:
+            data = request.json['data']
+
+        success = False
+        if scen_id:
+            success = scenarios.add_field(scen_id, field_name, score, data, notEqual)
+        elif group_id:
+            success = groups.add_field(group_id, field_name, score, data, notEqual)
+
+        if success:
+            logging.info("successfully added field '%r' (scenario id = %r, %r, %r, %r, %r)" %
+                         (field_name, scen_id_for_json, field_name, score, data, notEqual))
+
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response(
+                'Unable to add a new field. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/remove_field', methods=['POST'])
+def remove_field():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        field_id = request.json['fieldID']
+
+        success = fields.delete_field(field_id)
+
+        if success:
+            logging.info("successfully deleted field '%r' from scenario id = %r" % (field_id, scen_id_for_json))
+            return scenario_json(scen_id_for_json)
+        else:
+            response = make_response('Unable to delete field. If unable to resolve, please report error/bug.', 400)
+            return response
+
+
+@app.route('/edit_field', methods=['POST'])
+def edit_field():
+    if request.method == 'POST':
+        scen_id_for_json = request.json['scenID2']
+        field_id = request.json['fieldID']
+        field_name = request.json['fieldName']
+        score = request.json['score']
+        notEqual = False
+        if 'notEqual' in request.json:
+            notEqual = request.json['notEqual']
+        data = ''
+        if 'data' in request.json:
+            data = request.json['data']
+
+        success = fields.edit_field(field_id, field_name, score, data, notEqual)
+
+        if success:
+            logging.info(
+                "successfully edited field with id = '%r'(scenario id = %r, %r, %r, %r, %r)"
+                % (field_id, scen_id_for_json, field_name, score, data, notEqual))
 
             return scenario_json(scen_id_for_json)
         else:

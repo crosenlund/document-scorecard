@@ -31,12 +31,17 @@ def create_field(cur, name, score, data, not_equal):
 def delete_field(id):
     cur, conn = connect_to_db()
 
+    success = False
     if existing_field(id):
-        cur.execute("DELETE FROM fields WHERE id = '" + id + "';")
-        cur.execute("DELETE FROM fields_in_groups WHERE field_id = '" + id + "';")
+        cur.execute("DELETE FROM fields WHERE id = '" + str(id) + "';")
+        cur.execute("DELETE FROM fields_in_groups WHERE field_id = '" + str(id) + "';")
+        success = True
 
     commit(conn)
     close(cur, conn)
+
+    return success
+
 
 
 # edit a field's info
@@ -44,15 +49,17 @@ def edit_field(id, name, score, data, not_equal):
 
     cur, conn = connect_to_db()
 
-    cur.execute("UPDATE field SET "
-                "name = '" + name + "', "
-                "score = '" + score + "', "
-                "data = '" + data + "',"
-                "not_equal = '" + not_equal + "'"
-                " where id = " + id + ";")
+    cur.execute("UPDATE fields SET "
+                "name = %r, "
+                "score = %r, "
+                "data = %r,"
+                "not_equal = %r"
+                " where id = %r;" % (name, score, data, not_equal, id))
 
     commit(conn)
     close(cur, conn)
+
+    return True
 
 
 # see if a field exists in the database
@@ -60,9 +67,9 @@ def existing_field(id):
     cur, conn = connect_to_db()
 
     if id:
-        cur.execute("SELECT * FROM fields where id = '" + id + "';")
+        cur.execute("SELECT * FROM fields where id = '" + str(id) + "';")
     else:
-        logging.info("id was sent to this method (fields.existing_fields")
+        logging.info("Unable to find a field, %s was sent to this method (fields.existing_fields" % str(id))
         return False
 
     row = cur.fetchone()

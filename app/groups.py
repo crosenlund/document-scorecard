@@ -39,8 +39,7 @@ def add_field(group_id, name, score, data, not_equal):
     close(cur, conn)
 
     if 'new_id' is not -1:
-        logging.info("successfully added field '" + name + "' (id = " + str(field_id) + ", " +
-                     " " + name + ", " + score + ", " + data + ", " + not_equal + ")")
+        logging.info("successfully added field '%r' (id = %r, %r, %r, %r, %r)" % (name, field_id, name, score, data, not_equal))
 
     return field_id
 

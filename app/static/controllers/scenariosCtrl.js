@@ -92,7 +92,6 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                 } else if (action.indexOf('Field') > -1) { //limits the jsonData being sent when performing an action for a field
                     jsonData = (JSON.stringify({
                         //----------SCENARIO-------------------------------
-                        name: result.scenario.name,
                         scenID: result.scenario.scenId,
                         scenID2: $scope.selectedScenario.scenId,
                         //----------GROUP----------------------------------
@@ -100,11 +99,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         newGroupName: result.scenario.newGroupName,
                         groupID: result.scenario.groupId,
                         //----------FIELD----------------------------------
-                        oldFieldName: scenario.name,
-                        oldData: scenario.data,
-                        oldScore: scenario.score,
-                        oldNotEqual: scenario.notEqual,
-                        fieldName: result.scenario.fieldName,
+                        fieldName: result.scenario.name,
                         score: result.scenario.score,
                         data: result.scenario.data,
                         fieldID: result.scenario.fieldId,
@@ -254,7 +249,6 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
     };
 
     $scope.downloadScenario = function (scenario) {
-        console.log(scenario)
         var scenarioName = (JSON.stringify({
             name: scenario.name,
             id: scenario.scenId,

@@ -39,14 +39,15 @@
         <td class="hide-for-small" ng-hide="hideDateCreated">{[ scenario.datecreated ]}</td>
         <td ng-hide="hideDateModified">{[ scenario.datemodified ]}</td>
         <td class="actions txt-right">
-            <div class="btn-group" ng-class='{open: open}'>
+            <div class="btn-group" ng-class='{open: menuOpen == scenario.rootName + "-" + scenario.scenId}'>
 
-                <button class="btn dropdown-toggle" data-toggle="dropdown" ng-click='open=!open'><span
+                <button class="btn dropdown-toggle" data-toggle="dropdown"
+                        ng-click='openMenu(scenario.rootName + "-" + scenario.scenId)'><span
                         class="fa fa-ellipsis-h"></span></button>
                 <ul class="dropdown-menu" style="left: -120;">
                     <li>
                         <a class="no-border" title="download scenario" ng-hide="hideDownload"
-                           ng-click="downloadScenario(scenario); open = False">
+                           ng-click="downloadScenario(scenario); openMenu('')">
                             <i class="fa fa-cloud-download fa-lg"></i>
                             Download scenario
                         </a>
@@ -54,29 +55,30 @@
                     <li class="divider"></li>
                     <li>
                         <a class="no-border" title="edit scenario info" ng-hide="hideEdit"
-                           ng-click="openModal('edit', scenario); open = False">
+                           ng-click="openModal('edit', scenario); openMenu('')">
                             <i class="fa fa-edit fa-lg"></i>
                             Edit scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="copy scenario" ng-hide="hideCopy"
-                           ng-click="openModal('copy', scenario); open = False">
+                           ng-click="openModal('copy', scenario); openMenu('')">
                             <i class="fa fa-copy fa-lg"></i>
                             Copy scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="delete scenario" ng-hide="hideRemove"
-                           ng-click="openModal('delete', scenario); open = False">
+                           ng-click="openModal('delete', scenario); openMenu('')">
                             <i class="fa fa-trash-o fa-lg"></i>
                             Delete scenario
                         </a>
                     </li>
                     <li>
                         <a class="no-border" title="add scenario to test" ng-hide="hideAddTest"
-                           ng-click="addToList(scenario); open = False">
+                           ng-click="addToList(scenario); openMenu('')">
                             <i class="fa fa-level-up fa-lg fa-rotate-90"></i>
+                             Add to Test
                         </a>
                     </li>
                 </ul>

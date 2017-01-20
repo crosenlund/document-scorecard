@@ -18,9 +18,9 @@
                         {[ scenario.rootName ]}
                     </div>
                 </div>
-                <div class="btn-group" ng-class="{open: menuOpen == scenario.rootName + '-' + scenario.scenId }">
+                <div class="btn-group" ng-class="{open: menuOpen == scenario.rootName + '-' + scenario.scenId}">
                     <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
-                            ng-click='openMenu(scenario.rootName + "-" + scenario.scenId )'>
+                            ng-click='openMenu(scenario.rootName + "-" + scenario.scenId)'>
                         <span class="fa fa-ellipsis-h">
                         </span>
                     </button>
@@ -34,7 +34,7 @@
                         </li>
                         <li>
                             <a class="no-border" title="add field"
-                               ng-click="openModal('addField', group); openMenu('')">
+                               ng-click="openModal('addField', scenario); openMenu('')">
                                 <i class="fa fa-plus"></i>
                                 Add new field
                             </a>

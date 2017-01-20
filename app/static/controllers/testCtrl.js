@@ -10,6 +10,7 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     $scope.fileUploaded = false;
     $scope.reverse = true;
     $scope.fd = new FormData();
+    $scope.menuOpen = '';
 
     //hide buttons and columns for this view
     $scope.hideRemove = true;
@@ -110,6 +111,15 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
         } else {//row is unselected so empty selectedScenario and remove checkbox check
             $scope.selectedScenario = [];
             scen.isChecked = false;
+        }
+    };
+
+    //track which items menu button is open - only one should be open at a time
+    $scope.openMenu = function (name) {
+        if ($scope.menuOpen != name) {
+            $scope.menuOpen = name;
+        } else {//menuOpen == name, so close the menu without opening another
+            $scope.menuOpen = '';
         }
     };
 

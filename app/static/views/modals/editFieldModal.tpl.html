@@ -3,13 +3,14 @@
     <header class="modal-title">
         edit a field
     </header>
+    Editing field <strong>{[ newScenario.name ]}</strong>
     <ul class="fa-ul">
         <li>
             <div>
                 <label class="required">
-                    Xpath
+                    Name
                     <input type="text" autofocus placeHolder="enter a new field name..."
-                           ng-model="newScenario.fieldName">
+                           ng-model="newScenario.name">
                 </label>
             </div>
             <div>
@@ -28,8 +29,9 @@
                 </label>
             </div>
             <span>
-                <input id="checkbox-{[ scenario.notEqual ]}" type="checkbox" ng-model="newScenario.notEqual">
-                <label for="checkbox-{[ scenario.notEqual ]}">Data not equal to</label>
+                <input id="checkbox-{[ newScenario.notEqual ]}" type="checkbox" ng-checked="newScenario.notEqual"
+                       ng-model="newScenario.notEqual">
+                <label for="checkbox-{[ newScenario.notEqual ]}">Data not equal to</label>
             </span>
         </li>
     </ul>
@@ -42,7 +44,7 @@
         </li>
         <li>
             <button class="confirm" ng-click="closeModal()"
-                    ng-disabled="!newScenario.fieldName || (!newScenario.score ||
+                    ng-disabled="!newScenario.name || (!newScenario.score ||
                     newScenario.score > 5 || newScenario.score < 1)">
                 Finish
             </button>
