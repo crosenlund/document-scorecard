@@ -99,7 +99,8 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         newGroupName: result.scenario.newGroupName,
                         groupID: result.scenario.groupId,
                         //----------FIELD----------------------------------
-                        fieldName: result.scenario.name,
+                        fieldName: result.scenario.fieldName,
+                        fieldName2: result.scenario.name,
                         score: result.scenario.score,
                         data: result.scenario.data,
                         fieldID: result.scenario.fieldId,

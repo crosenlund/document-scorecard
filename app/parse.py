@@ -1,6 +1,7 @@
 from lxml.etree import XMLSyntaxError
 from lxml import etree
 import re
+import logging
 
 
 # returns json data of a parsed xml file
@@ -14,6 +15,12 @@ def new_scenario(file_name):
         except XMLSyntaxError:
             return '', 'There was a problem parsing %s. Please report a bug if issue cannot be resolved from the' \
                        ' following: ( TODO: insert web link to help page)' % file_name
+
+    # remove the namespace from the nodes' tag/name
+    nodes = data_tree.iter()
+    for node in nodes:
+        if '}' in node.tag:
+            node.tag = node.tag.split("}")[1][0:]
 
     # go through all the fields in the document to check for scores, if missing or invalid - err
     nodes = data_tree.iter()
@@ -33,8 +40,8 @@ def new_scenario(file_name):
             else:
                 error += '\n line %s: missing score for %s' % (node.sourceline, node.tag)
 
-    print(error)
     if error:
+        logging.info(error)
         return "", error
 
     root_node = data_tree.getroot()

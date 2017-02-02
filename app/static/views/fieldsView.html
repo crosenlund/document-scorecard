@@ -42,8 +42,7 @@
                     </ul>
                 </div>
             </div>
-            <div ng-hide="scenario.closeRoot && !$parent.expandAll" ng-repeat="field in scenario.fields"
-                 ng-include="'fieldView'">
+            <div ng-hide="scenario.closeRoot" ng-repeat="field in scenario.fields" ng-include="'fieldView'">
             </div>
             <div ng-hide="scenario.closeRoot" ng-repeat="group in scenario.groups" ng-include="'groupView'">
             </div>
@@ -99,9 +98,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="fields-container">
-                <div ng-if="!$parent.group.expandedGroup" ng-repeat="field in group.fields" ng-include="'fieldView'">
-                </div>
+            <div ng-if="!$parent.group.expandedGroup" ng-repeat="field in group.fields" ng-include="'fieldView'">
             </div>
             <div ng-if="!$parent.group.expandedGroup" ng-repeat="group in group.groups" ng-include="'groupView'">
             </div>

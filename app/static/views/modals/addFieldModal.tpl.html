@@ -4,35 +4,42 @@
         Create a field
     </header>
     Adding a new field to <strong>{[ scenario.name ]}{[ scenario.rootName ]}</strong>
-    <ul class="fa-ul">
-        <li>
-            <div>
-                <label class="required">
-                    Name
-                    <input type="text" autofocus placeHolder="enter a new name..." ng-model="newScenario.fieldName">
-                </label>
-            </div>
-            <div>
-                <label class="required">
-                    Score
-                    <input type="number" placeHolder="enter a score..." ng-model="newScenario.score">
-                </label>
-                <label ng-show="newScenario.score && (newScenario.score > 5 || newScenario.score < 1) || newScenario.score == 0">
-                    Score must be in the range 1 - 5
-                </label>
-            </div>
-            <div>
-                <label>
-                    Data
-                    <input type="text" placeHolder="enter new data..." ng-model="newScenario.data">
-                </label>
-            </div>
-            <span>
+    <form name="myForm">
+        <ul class="fa-ul">
+            <li>
+                <div>
+                    <label class="required">
+                        Name
+                        <input required type="text" name="name" autofocus placeHolder="enter a new name..."
+                               ng-model="newScenario.fieldName" ng-pattern="/^[a-zA-Z0-9]*$/">
+                    </label>
+                    <label ng-show="myForm.name.$error.pattern">
+                        A field may not contain a space
+                    </label>
+                </div>
+                <div>
+                    <label class="required">
+                        Score
+                        <input type="number" name="score" placeHolder="enter a score..." ng-model="newScenario.score"
+                               ng-pattern="/^[1-5]$/">
+                    </label>
+                    <label ng-show="myForm.score.$invalid">
+                        Score must be in the range 1 - 5
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Data
+                        <input type="text" placeHolder="enter new data..." ng-model="newScenario.data">
+                    </label>
+                </div>
+                <span>
                 <input id="checkbox-{[ scenario.notEqual ]}" type="checkbox" ng-model="newScenario.notEqual">
                 <label for="checkbox-{[ scenario.notEqual ]}">Data not equal to</label>
             </span>
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </form>
     <ul class="form-actions">
         <li>
             <button class="button" ng-click="cancelModal()">Cancel</button>

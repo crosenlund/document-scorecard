@@ -42,19 +42,10 @@ def process_file(file, scen_tree, validate_data, validate_schema):
         try:
             file_tree = etree.parse(xml_file, parsing)
             root = file_tree.getroot()
-            print(root.getchildren())
-            for child in root.getchildren():
-                print(child.tag)
-                if child.tag == 'ItemRegistry':
-                    print(child.tag)
-            scen_tree_root_node = scen_tree.getroot()
-            scen_tree_root_node_name = scen_tree_root_node.tag
-            print(scen_tree.getpath(scen_tree_root_node).split('/')[-1].split("}")[1][0:])
-            find_node = scen_tree.getpath(scen_tree_root_node)
-            for node2 in file_tree.iter(find_node):
-                print(node2)
-            # file_tree = file_tree.find('/'+scen_tree.getroot().tag)
-            print(file_tree)
+            for node in file_tree.iter():
+                if '}' in node.tag:
+                    node.tag = node.tag.split("}")[1][0:]
+
         except XMLSyntaxError:
             errors += 'There was a problem parsing %s. Please report a bug if issue cannot be resolved from the' \
                       ' following: ( TODO: insert web link to help page)' % file
@@ -63,6 +54,14 @@ def process_file(file, scen_tree, validate_data, validate_schema):
 
     # start with the scenario data and compare to that in the test file
     for node in scen_tree.iter():
+        if node.getparent() is None:  # skip the root node
+            continue
+        if len(node) > 1:  # group that has children/fields
+            continue
+        if len(node) < 1:  # field
+            continue
+
+
         scenario_node_path = re.sub("\\[\d\\]", "", scen_tree.getpath(node))
         print(scenario_node_path)
         node_score = 0
@@ -72,10 +71,6 @@ def process_file(file, scen_tree, validate_data, validate_schema):
             node_score = int(node.attrib['score'])
             total_score += node_score
             print(total_score)
-        print(node)
-        print('xpath: %r' % scen_tree.xpath('/ItemRegistry'))
-        # print("%s - %s" % (node.tag, node.text))
-        # print(scen_tree.getpath(node))
         for node2 in file_tree.iter(node.tag):
             print(node2)
             file_node_path = re.sub("\\[\d\\]", "", file_tree.getpath(node2))

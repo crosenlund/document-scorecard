@@ -13,6 +13,8 @@ def build_scenario(scenario_info, scenario_data):
     fulfillment_type = ''
     schema_name = ''
     doc_type = ''
+    date_created = ''
+    print(scenario_info)
 
     # parsing the scenario_info so that we can add a scenario using the info later
     for (v, info) in scenario_info.items():
@@ -28,30 +30,42 @@ def build_scenario(scenario_info, scenario_data):
             schema_name = info
         if v == 'docType':
             doc_type = info
+        if v == 'datecreated':
+            date_created = info
 
-    # if the root_node in the data is the root we are looking for
-    if scenario_data['rootName'] == root_name:
-        logging.info("(find_root) found %s in %r", root_name, scenario_data)
-    else:  # if not, go find it
-        scenario_data = find_root(root_name, scenario_data)
-    # if it doesn't exist, error
-    if not scenario_data:
-        logging.info("Error, could not find the correct starting root node that was indicated (rootName)")
-        return '', "Error, could not find the correct starting root node that was indicated (rootName)"
+    # when creating a scenario from a file
+    if scenario_data:
+        # if the root_node in the data is the root we are looking for
+        if scenario_data['rootName'] == root_name:
+            logging.info("(find_root) found %s in %r", root_name, scenario_data)
+        else:  # if not, go find it
+            scenario_data = find_root(root_name, scenario_data)
+        # if it doesn't exist, error
+        if not scenario_data:
+            logging.info("Error, could not find the correct starting root node that was indicated (rootName)")
+            return '', "Error, could not find the correct starting root node that was indicated (rootName)"
 
-    # now add the scenario to the database
-    scen_id = scenarios.add_scenario(scen_name, description, doc_type, fulfillment_type, schema_name, root_name)
-    # confirm scenario table row added
-    # scen_id = 1
+        # now add the scenario to the database
+        scen_id = scenarios.add_scenario(scen_name, description, doc_type, fulfillment_type, schema_name, root_name, date_created)
+        # confirm scenario table row added
+        # scen_id = 1
+        if scen_id is not -1:
+            if 'fields' in scenario_data:
+                create_fields(scen_id, None, scenario_data['fields'])
+
+            if 'groups' in scenario_data:
+                create_groups(scen_id, None, scenario_data['groups'])
+    # when creating a blank scenario
+    else:
+        scen_id = scenarios.add_scenario(scen_name, description, doc_type, fulfillment_type, schema_name, root_name)
+
     if scen_id is not -1:
-        if 'fields' in scenario_data:
-            create_fields(scen_id, None, scenario_data['fields'])
-
-        if 'groups' in scenario_data:
-            create_groups(scen_id, None, scenario_data['groups'])
-
-    # successfully created the scenario if this point is reached
-    return True, ''
+        # successfully created the scenario if this point is reached
+        return True, ''
+    else:
+        # Something went wrong
+        logging.info("There was an error creating a scenario, please check that the name does not duplicate.")
+        return False, 'There was an error creating a scenario, please check that the name does not duplicate.'
 
 
 # This method is used to find the correct root node to build a scenario from. If the scenario file sent starts with the
@@ -134,3 +148,22 @@ def create_fields(scenario_id, group_id, fields_data):
         elif scenario_id:
             scenarios.add_field(scenario_id, name, score, data, not_equal)
             logging.info("adding field " + name + " to scenario " + str(scenario_id))
+
+
+# add the copied scenario to the database
+def copy_scenario(scen_id, scenario_data):
+    # check that the scenario to the database
+    if scenarios.existing_scenario(scen_id, None):
+        if 'fields' in scenario_data:
+            create_fields(scen_id, None, scenario_data['fields'])
+
+        if 'groups' in scenario_data:
+            create_groups(scen_id, None, scenario_data['groups'])
+
+        # successfully created the scenario if this point is reached
+        return True, ''
+    else:
+        # Something went wrong
+        logging.info("There was an error creating a scenario, please check that the name does not duplicate.")
+        return False, 'There was an error creating a scenario, please check that the name does not duplicate.'
+

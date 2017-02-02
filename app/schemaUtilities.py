@@ -66,10 +66,9 @@ def order_xml(xmlfile, schema_name):
     try:
         layouts_path = app.config['SCHEMA_LAYOUTS_FOLDER']
         doc = check_output('python %s/%s.py %s' % (layouts_path, layout_name, xmlfile))
-        print(doc)
         w = open(app.config['APP_FOLDER'] + '/output.xml', 'wb')
         w.write(doc)
         w.close()
     except:
-        print('fail4')
+        print('Failed to print/order xml')
     return True

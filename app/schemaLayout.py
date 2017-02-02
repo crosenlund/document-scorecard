@@ -54,7 +54,6 @@ def configure_xsd(xsd):
 def add_attributes():
     logging.info("add_attributes")
     attribs = ''
-    # ATTRIBUTE_TYPES = {'integer', 'string', 'date', 'decimal', 'boolean', 'date', 'time'}
     ATTRIBUTE_TYPES = {'string'}
     ATTRIBUTES = {'score': 'int', 'qualified-rep': 'string', 'requires-one': 'string', 'not-equal': 'string',
                   'requires-others': 'string'}
@@ -64,7 +63,6 @@ def add_attributes():
         for attribute, Att_type in ATTRIBUTES.items():
             attribs += '<xs:attribute name = "%s" type = "xs:%s"/> \n' % (attribute, Att_type)
         attribs += '</xs:extension>\n</xs:simpleContent>\n</xs:complexType>'
-    # print("add_attributes--- %s seconds ---" % (time.time() - start_time))
     return attribs
 
 
@@ -75,10 +73,8 @@ def create_schema_layout(xsd, schema_name):
     root = schema.getroot()
     string_o = root[0].attrib['name']
     string_s = root[1].attrib['name']
-    # string_o = 'schemasLayout'
-    # string_s = 'schema'
     _object = '%s/%s.py' % (app.config['SCHEMA_LAYOUTS_FOLDER'], schema_name)
-    sub_object = '%s.py' % string_s
+    sub_object = '%s/%s.py' % (app.config['UPLOAD_FOLDER'], string_s)
     _super = string_o
     xsd_name = xsd
     generateDS_path = app.config['GENERATEDS_FOLDER']

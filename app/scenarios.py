@@ -78,7 +78,7 @@ def add_group(scen_id, name, qualifier, qualifier_field):
 
 
 # add a new scenario to the database
-def add_scenario(name, description, doc_type, fulfillment_type, schema_name, root_name):
+def add_scenario(name, description, doc_type, fulfillment_type, schema_name, root_name, create_date):
     scen_id = -1
     if name:
         cur, conn = connect_to_db()
@@ -86,10 +86,16 @@ def add_scenario(name, description, doc_type, fulfillment_type, schema_name, roo
         if existing_scenario(None, name):
             logging.info("A scenario with the name '" + name + "' already exists.")
         else:
-            cur.execute(
-                "INSERT INTO scenarios (name, description, doc_type, fulfillment_type, "
-                "schema_name, root_name, date_created, date_modified) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP(2), CURRENT_TIMESTAMP(2)) RETURNING id;",
-                (name, description, doc_type, fulfillment_type, schema_name, root_name))
+            if create_date:
+                cur.execute(
+                    "INSERT INTO scenarios (name, description, doc_type, fulfillment_type, "
+                    "schema_name, root_name, date_created, date_modified) VALUES (%s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP(2)) RETURNING id;",
+                    (name, description, doc_type, fulfillment_type, schema_name, root_name, create_date))
+            else:
+                cur.execute(
+                    "INSERT INTO scenarios (name, description, doc_type, fulfillment_type, "
+                    "schema_name, root_name, date_created, date_modified) VALUES (%s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP(2), CURRENT_TIMESTAMP(2)) RETURNING id;",
+                    (name, description, doc_type, fulfillment_type, schema_name, root_name))
             scen_id = cur.fetchone()[0]
 
         commit(conn)
@@ -127,6 +133,7 @@ def delete_scenario(id):
 
 # create a new scenario by copying an existing one
 def copy_scenario(id, name):
+    scen_id = 0
     error = ''
     copy = True
     if name:
@@ -145,7 +152,7 @@ def copy_scenario(id, name):
         if copy:
             try:
                 info, error = get_info(id)
-                add_scenario(name, info[2], info[3], info[4], info[5], info[6])
+                scen_id = add_scenario(name, info[2], info[3], info[4], info[5], info[6], None)
                 logging.info("successfully copied scenario '" + name + "' (id = " + str(id) + ", " +
                              " " + name + ", " + info[2] + ", " + info[3] + ", " +
                              " " + info[4] + ", " + info[5] + ", " + info[6] + ")")
@@ -161,7 +168,7 @@ def copy_scenario(id, name):
         logging.info("name cannot be null or empty string")
         error += "name cannot be null or empty string"
 
-    return copy, error
+    return scen_id, error
 
 
 # edit a scenario's info
@@ -265,6 +272,7 @@ def get_id(name):
     row = cur.fetchone()[0]
 
     return row
+
 
 # get the scenarios info
 def get_info(id):

@@ -4,16 +4,22 @@
         Create a Group
     </header>
     Adding a new group to <strong>{[ scenario.name ]}{[ scenario.rootName ]}</strong>
-    <ul class="fa-ul">
-        <li>
-            <div>
-                <label class="required">
-                    Name
-                    <input type="text" autofocus placeholder="enter a new name..." ng-model="newScenario.newGroupName">
-                </label>
-            </div>
-        </li>
-    </ul>
+    <form name="myForm">
+        <ul class="fa-ul">
+            <li>
+                <div>
+                    <label class="required">
+                        Name
+                        <input type="text" name="name" autofocus placeholder="enter a new name..."
+                               ng-model="newScenario.newGroupName" ng-pattern="/^[a-zA-Z0-9]*$/">
+                    </label>
+                    <label ng-show="myForm.name.$error.pattern">
+                        A group name may not contain a space
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </form>
     <ul class="form-actions">
         <li>
             <button class="button" ng-click="cancelModal()">Cancel</button>

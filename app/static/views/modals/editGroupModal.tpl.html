@@ -1,31 +1,38 @@
-<div id="edit-modal" name="editModal" class="reveal-modal warning open" tabindex="0" aria-hidden="false" style="display: block; opacity: 1; visibility: visible; top: 100px; max-height: 500px; width: auto">
-  <header class="modal-title">
-    edit a group
-  </header>
-  Editing group <strong>{[ newScenario.name ]}</strong>
-  <ul class="fa-ul">
-    <li>
-      <div>
-        <label class="required">
-          Name
-          <input type="text" autofocus placeHolder="enter a new name..." ng-model="newScenario.newGroupName">
-        </label>
-      </div>
-    </li>
-  </ul>
-  <ul class="form-actions">
-    <li class="msg">
-      <strong>Fair warning:</strong> this cannot be undone, but re-edited.
-    </li>
-    <li>
-      <button class="button" ng-click="cancelModal()">Cancel</button>
-    </li>
-    <li>
-      <button class="confirm" ng-click="closeModal()"
-      ng-disabled="!newScenario.newGroupName">
-        Finish
-      </button>
-    </li>
-  </ul>
-  <a class="close-reveal-modal" ng-click="cancelModal()">x</a>
+<div id="edit-modal" name="editModal" class="reveal-modal warning open" tabindex="0" aria-hidden="false"
+     style="display: block; opacity: 1; visibility: visible; top: 100px; max-height: 500px; width: auto">
+    <header class="modal-title">
+        edit a group
+    </header>
+    Editing group <strong>{[ newScenario.name ]}</strong>
+    <form name="myForm">
+        <ul class="fa-ul">
+            <li>
+                <div>
+                    <label class="required">
+                        Name
+                        <input type="text" name="name" autofocus placeHolder="enter a new name..."
+                               ng-model="newScenario.newGroupName" ng-pattern="/^[a-zA-Z0-9]*$/">
+                    </label>
+                    <label ng-show="myForm.name.$error.pattern">
+                        A group name may not contain a space
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </form>
+    <ul class="form-actions">
+        <li class="msg">
+            <strong>Fair warning:</strong> this cannot be undone, but re-edited.
+        </li>
+        <li>
+            <button class="button" ng-click="cancelModal()">Cancel</button>
+        </li>
+        <li>
+            <button class="confirm" ng-click="closeModal()"
+                    ng-disabled="!newScenario.newGroupName">
+                Finish
+            </button>
+        </li>
+    </ul>
+    <a class="close-reveal-modal" ng-click="cancelModal()">x</a>
 </div>

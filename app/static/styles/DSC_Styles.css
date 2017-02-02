@@ -3,6 +3,10 @@
     height: 400px;
 }
 
+input.ng-dirty.ng-invalid {
+    color: red
+}
+
 table {
     padding-top: 5px;
     overflow-y: auto;
@@ -29,13 +33,12 @@ table {
     cursor: pointer;
     color: #FA6423;
 }
+
 .tree-node-container {
     display: block;
 }
 
 .scenario-tree {
-    float: left;
-    width: 100%;
     list-style: none;
 }
 
@@ -43,13 +46,10 @@ table {
     float: left;
 }
 
-.fields-container {
-    float: left;
-}
-
 .node-icon {
     color: #000000;
 }
+
 .icon-container {
     position: relative;
     margin-right: 5px;

@@ -30,9 +30,9 @@
                     </label>
                 </div>
                 <div class="large-10 small-10 columns">
-                    <label title="Required to download a scenario">
+                    <label class="required">
                         Root Name
-                        <input type="text" placeHolder="Root Name is required if file is not uploaded..."
+                        <input ng-disabled="true" type="text" placeHolder="Root Name is required if file is not uploaded..."
                                ng-model="newScenario.rootname">
                     </label>
                 </div>
