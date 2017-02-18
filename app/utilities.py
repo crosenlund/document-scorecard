@@ -1,4 +1,5 @@
 from app import database
+import re
 
 ALLOWED_EXTENSIONS = ['txt', 'xml']
 
@@ -7,6 +8,9 @@ ALLOWED_EXTENSIONS = ['txt', 'xml']
 def file_allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
+def clean_xml_path(path):
+    return re.sub("\\[\d{1,6}\\]", "", path)
 
 def scenario_from_xml_to_json(xml, scen):
     scen_list = []

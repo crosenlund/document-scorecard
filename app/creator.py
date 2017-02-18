@@ -57,7 +57,7 @@ def build_scenario(scenario_info, scenario_data):
                 create_groups(scen_id, None, scenario_data['groups'])
     # when creating a blank scenario
     else:
-        scen_id = scenarios.add_scenario(scen_name, description, doc_type, fulfillment_type, schema_name, root_name)
+        scen_id = scenarios.add_scenario(scen_name, description, doc_type, fulfillment_type, schema_name, root_name, None)
 
     if scen_id is not -1:
         # successfully created the scenario if this point is reached

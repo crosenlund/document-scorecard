@@ -64,15 +64,20 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
         }));
         $scope.fd.append("data", jsonData);
 
-        scenariosFactory.compareAndDownload($scope.fd).success(function (data) {
-            console.log(data);
+        scenariosFactory.compareAndDownload($scope.fd).success(function (data, status, headers, config) {
+            console.log(headers);
             var blob = new Blob([data], {type: "attachment;charset=utf-8"});
+            console.log(headers("Content-Disposition"));
             var fileDownload = angular.element('<a></a>');
-            var fileName = data.fileName;
+            var fileName = headers("Content-Disposition").split(';')[1].trim().split('=')[1];
+            fileName = fileName.replace(/"/g, '');
             fileDownload.attr('href', window.URL.createObjectURL(blob));
-            fileDownload.attr('download', $scope.selectedScenario.name + '-field_list.txt');
+            fileDownload.attr('download', fileName);
             fileDownload[0].click();
-            console.log(data);
+
+            // we have to clear this data after the test is run so old data is not used next time
+            $scope.fd = new FormData();
+            $scope.fileUploaded = false;
         });
     };
 
@@ -133,16 +138,7 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
                 //add the selected scenario to the scenario test list, automatically updates the table
                 $scope.scenariosTestList.push(scenario);
             }
-            var stringList = '';
-            $scope.testList = '';
-            $scope.scenariosTestList.some(function (entry, i) {
-                if (stringList == '') {//prevent a leading comma
-                    stringList = entry.name;
-                } else {//already a value in stringList
-                    stringList = stringList + "," + entry.name;
-                }
-            });
-            $scope.testList = stringList;
+            $scope.updateTestList();
         }
     };
 
@@ -159,5 +155,19 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
         if (position != -1) {
             $scope.scenariosTestList.splice(position, 1);
         }
+        $scope.updateTestList();
     };
+
+    $scope.updateTestList = function () {
+        var stringList = '';
+        $scope.testList = '';
+        $scope.scenariosTestList.some(function (entry, i) {
+            if (stringList == '') {//prevent a leading comma
+                stringList = entry.name;
+            } else {//already a value in stringList
+                stringList = stringList + "," + entry.name;
+            }
+        });
+        $scope.testList = stringList;
+    }
 }

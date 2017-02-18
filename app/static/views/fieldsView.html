@@ -142,10 +142,6 @@
         </div>
     </script>
 </div>
-<span class="txt-center" ng-hide="selectedScenario != ''">
+<span class="txt-center" ng-show="selectedScenario == ''">
     <h2>Select a scenario to see groups and fields</h2>
-</span>
-<span class="txt-center"
-      ng-show="selectedScenario != '' && currentScenario.groups == '' && currentScenario.fields == ''">
-    <h2>The selected scenario does not have any fields</h2>
 </span>

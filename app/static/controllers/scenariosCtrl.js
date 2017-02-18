@@ -177,9 +177,10 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                     scenariosFactory.deleteScenario(jsonData).success(function (data) {
                         $scope.scenarios = data;
                         // empty fields table so it doesn't still show the deleted scenario
-                        $scope.selectedScenario = '';
-                        $scope.groups = '';
-                        $scope.fields = '';
+                        if (result.scenario.name == $scope.selectedScenario) {
+                            $scope.selectedScenario = '';
+                            $scope.currentScenario = [];
+                        }
                         feedbackService.addMessage('Scenario successfully deleted', '200');
                     })
                         .error(function (result, status) {

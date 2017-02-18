@@ -274,6 +274,16 @@ def get_id(name):
     return row
 
 
+# return the id of a scenario when given the name
+def get_schema_name(id):
+    cur, conn = connect_to_db()
+    cur.execute("SELECT schema_name FROM scenarios where id = '" + str(id) + "'")
+
+    row = cur.fetchone()[0]
+
+    return row
+
+
 # get the scenarios info
 def get_info(id):
     cur, conn = connect_to_db()

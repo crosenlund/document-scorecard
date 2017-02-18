@@ -27,29 +27,7 @@ def get_scenario_list():
 def create_scenario():
     if request.method == 'POST':
         error = ""
-        name = request.json['name']
-        description = request.json['description']
-        doctype = request.json['docType']
-        rootname = ''
-        if 'rootname' in request.json:
-            rootname = request.json['rootname']
-        fulfillmenttype = ''
-        if 'fulfillmenttype' in request.json:
-            fulfillmenttype = request.json['fulfillmenttype']
-        schema = ''
-        if 'schema' in request.json:
-            schema = request.json['schema']
         data = request.json
-        # data = []
-        # data.append({'name': name})
-        # data.append({'description': description})
-        # data.append({'doctype': doctype})
-        # data.append({'rootname': rootname})
-        # data.append({'fulfillmenttype': fulfillmenttype})
-        # data.append({'schema': schema})
-        # data = {'name': name, 'description': description, 'doctype': doctype, 'rootname': rootname,
-        #          'fulfillmenttype': fulfillmenttype, 'schema': schema}
-        # data = list(data)
         created_scenario, new_error = creator.build_scenario(data, '')
 
         if new_error:
@@ -70,12 +48,19 @@ def upload_new_scenario():
         error = ''
         scenario_data = []
         is_valid = False
+        schema = ''
+        if 'schema' in data:
+            schema = data['schema']
 
         if file:
             if utilities.file_allowed(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                scenario_data, new_error = parse.new_scenario(app.config['UPLOAD_FOLDER'] + '/' + filename)
+                if schema is not '':
+                    schemaUtilities.order_xml(app.config['UPLOAD_FOLDER'] + '/' + filename, schema)
+                    scenario_data, new_error = parse.new_scenario(app.config['APP_FOLDER'] + '/output.xml')
+                else:
+                    scenario_data, new_error = parse.new_scenario(app.config['UPLOAD_FOLDER'] + '/' + filename)
                 if scenario_data:
                     is_valid = True
                 else:
@@ -124,7 +109,6 @@ def copy_scenario():
             scenario_data, error = scenarios.to_xml(scen_id)
             scen_info, errors = scenarios.get_info(scen_id)
             schema = scen_info[5]
-            print(schema)
             with open(app.config['UPLOAD_FOLDER'] + '/temp.xml', 'wb') as w:
                 w.write(scenario_data)
 
@@ -188,7 +172,6 @@ def scenario_json2(scen_id):
         scenario_data, error = scenarios.to_xml(scen_id)
         scen_info, errors = scenarios.get_info(scen_id)
         schema = scen_info[5]
-        print(schema)
         with open(app.config['APP_FOLDER'] + '/temp.xml', 'wb') as w:
             w.write(scenario_data)
 
@@ -263,17 +246,21 @@ def compare_download():
         validate_to_schema = data['validateSchema']
         validate_to_data = data['validateData']
         scenarios_list = selected_list.split(',')
+        scen_name = 'multi'
+        if len(scenarios_list) == 1:
+            scen_name = scenarios_list[0]
         error = ''
 
         if files and selected_list:
-            compare.compare(files, scenarios_list, validate_to_data, validate_to_schema)
+            results = compare.compare(files, scenarios_list, validate_to_data, validate_to_schema)
         else:
             response = make_response("Unable to find files and/or scenarios selected", 400)
             return response
 
-        response = make_response("compare and download output", 200)
-        # response = make_response(scenarios_list)
-        # response.headers["Content-Disposition"] = "attachment;filename=%s.txt" % scen_name
+        # response = make_response("compare and download output", 200)
+        output_text = output.format_text(results, validate_to_data, validate_to_schema, True)
+        response = make_response(output_text, 200)
+        response.headers["Content-Disposition"] = "attachment;filename=%s.txt" % scen_name
         return response
 
 
