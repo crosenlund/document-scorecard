@@ -276,21 +276,21 @@ def add_group():
         if 'scenID' in request.json:
             scen_id = request.json['scenID']
         group_name = request.json['newGroupName']
-        qualifier_value = ''
-        if 'qualifier_value' in request.json:
-            qualifier_value = request.json['qualifier_value']
-        qualifier_field = ''
-        if 'qualifier_field' in request.json:
-            qualifier_field = request.json['qualifier_field']
+        qualifying_value = ''
+        if 'qualifyingField' in request.json:
+            qualifying_value = request.json['qualifyingField']
+        qualifying_field = ''
+        if 'qualifyingValue' in request.json:
+            qualifying_field = request.json['qualifyingValue']
 
         if scen_id:
-            success = scenarios.add_group(scen_id, group_name, qualifier_value, qualifier_field)
+            success = scenarios.add_group(scen_id, group_name, qualifying_value, qualifying_field)
         elif group_id:
-            success = groups.add_group(group_id, group_name, qualifier_value, qualifier_field)
+            success = groups.add_group(group_id, group_name, qualifying_value, qualifying_field)
 
         if success:
             logging.info("successfully added group '" + group_name + "' (scenario id = " + str(scen_id) + ", " +
-                         " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+                         " " + group_name + ", " + qualifying_value + "," + qualifying_field + ")")
 
             return scenario_json(scen_id_for_json)
         else:
@@ -325,19 +325,19 @@ def edit_group():
             group_id = request.json['groupID']
         group_name = request.json['newGroupName']
         current_name = request.json['name']
-        qualifier_value = ''
-        if 'qualifier_value' in request.json:
-            qualifier_value = request.json['qualifier_value']
-        qualifier_field = ''
-        if 'qualifier_field' in request.json:
-            qualifier_field = request.json['qualifier_field']
+        qualifying_value = ''
+        if 'qualifyingField' in request.json:
+            qualifying_value = request.json['qualifyingField']
+        qualifying_field = ''
+        if 'qualifyingValue' in request.json:
+            qualifying_field = request.json['qualifyingValue']
 
-        success = groups.edit_group(group_id, group_name, qualifier_value, qualifier_field)
+        success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field)
 
         if success:
             logging.info(
                 "successfully edited group with id = '" + str(group_id) + "'(scenario id = " + str(
-                    scen_id_for_json) + ", " + " " + group_name + ", " + qualifier_value + "," + qualifier_field + ")")
+                    scen_id_for_json) + ", " + " " + group_name + ", " + qualifying_value + "," + qualifying_field + ")")
 
             return scenario_json(scen_id_for_json)
         else:

@@ -3,7 +3,7 @@
     <header class="modal-title">
         edit a group
     </header>
-    Editing group <strong>{[ newScenario.name ]}</strong>
+    Editing group <strong>{[ scenario.name ]}</strong>
     <form name="myForm">
         <ul class="fa-ul">
             <li>
@@ -11,9 +11,33 @@
                     <label class="required">
                         Name
                         <input type="text" name="name" autofocus placeHolder="enter a new name..."
-                               ng-model="newScenario.newGroupName" ng-pattern="/^[a-zA-Z0-9]*$/">
+                               ng-model="newScenario.name" ng-pattern="/^[a-zA-Z0-9_]*$/">
                     </label>
                     <label ng-show="myForm.name.$error.pattern">
+                        A field name may not contain a space or special characters
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>
+                        Qualifier Field
+                        <input type="text" name="qualifyingField" placeHolder="add a qualifying field..."
+                               ng-model="newScenario.qualifyingField" ng-pattern="/^[a-zA-Z0-9_]*$/">
+                    </label>
+                    <label ng-show="myForm.qualifyingField.$error.pattern">
+                        A field name may not contain a space or special characters
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>
+                        Qualifier Value
+                        <input type="text" name="qualifyingValue" placeHolder="add a qualifying value..."
+                               ng-model="newScenario.qualifyingValue">
+                    </label>
+                    <label ng-show="myForm.qualifyingValue.$error.pattern">
                         A group name may not contain a space
                     </label>
                 </div>
@@ -29,7 +53,7 @@
         </li>
         <li>
             <button class="confirm" ng-click="closeModal()"
-                    ng-disabled="!newScenario.newGroupName">
+                    ng-disabled="!newScenario.name">
                 Finish
             </button>
         </li>

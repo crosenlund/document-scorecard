@@ -367,6 +367,12 @@ def build_groups_xml(cur, id, add_to_group, group_fields):
         group_info = cur.fetchone()
         group_name = group_info[1]
         group_node = etree.Element(group_name)
+        if group_info[2]:
+            print("qualifier-field", group_node)
+            group_node.set('qualifying-field', str(group_info[2]))
+        if group_info[3]:
+            print("qualifier-value", group_node)
+            group_node.set('qualifying-value', str(group_info[3]))
         group_node = (build_fields_xml(cur, group_id, group_node, True))
         group_node = (build_groups_xml(cur, group_id, group_node, True))
         add_to_group.append(group_node)
@@ -462,20 +468,20 @@ def build_groups_json(cur, id, group_fields):
         groups_built = build_groups_json(cur, group_id, True)
         if fields_built:
             if groups_built:
-                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
-                                   "qualifier_field": group_info[3], "groups": groups_built,
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
+                                   "qualifyingValue": group_info[3], "groups": groups_built,
                                    "fields": fields_built})
             if not groups_built:
-                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
-                                   "qualifier_field": group_info[3], "fields": fields_built})
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
+                                   "qualifyingValue": group_info[3], "fields": fields_built})
 
         if not fields_built:
             if groups_built:
-                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
-                                   "qualifier_field": group_info[3], "groups": groups_built})
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
+                                   "qualifyingValue": group_info[3], "groups": groups_built})
             if not groups_built:
-                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifier": group_info[2],
-                                   "qualifier_field": group_info[3]})
+                group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
+                                   "qualifyingValue": group_info[3]})
 
     return group_list
 
@@ -499,6 +505,6 @@ def build_fields_json(cur, id, group_field):
         field_info = cur.fetchone()
         field_list.append(
             {"fieldId": field_info[0], "name": field_info[1], "score": field_info[2], "data": field_info[3],
-             "not_equal": field_info[4]})
+             "notEqual": field_info[4]})
 
     return field_list

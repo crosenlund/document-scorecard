@@ -16,7 +16,7 @@ def configure_xsd(xsd):
                          ' minOccurs="0"': ''}
     regex_multiple_lines = {'<xs:annotation.+?</xs:annotation>': '',
                             '<xs:simpleType>.+?<xs:restriction base="(.+?)">.+?</xs:simpleType>': '\\1'}
-    # this adds the type attribute to field element tags when they appear inside the element
+    # this adds the type attribute to field element tags when they appear inside the xsd
     regex_add_element_type = {
         '(\s+?<xs:element name=\"[^\"]+?\")\s?>\n?\s+?(xs:string)\n\s+?</xs:element>': '\\1 type="\\2"/>\n'}
     # change all element types from xs:string to xs:attributes-string to allow for the attributes we have added
@@ -43,8 +43,10 @@ def configure_xsd(xsd):
     # remove any blank lines in the file
     file_string = remove_empty_lines(file_string)
 
-    # add the attributes to the xsd file
+    # add the field and group attributes to the xsd file
     file_string = re.sub('</xs:schema>', add_attributes() + '\n</xs:schema>', file_string)
+    file_string = re.sub('<xs:sequence>', '<xs:sequence>' + add_group_attributes(), file_string)
+
     w = open(xsd, 'w')
     w.write(file_string)
     w.close()
@@ -63,6 +65,17 @@ def add_attributes():
         for attribute, Att_type in ATTRIBUTES.items():
             attribs += '<xs:attribute name = "%s" type = "xs:%s"/> \n' % (attribute, Att_type)
         attribs += '</xs:extension>\n</xs:simpleContent>\n</xs:complexType>'
+
+    return attribs
+
+
+def add_group_attributes():
+    attribs = ''
+
+    GROUP_ATTRIBUTES = {'qualifying-field': 'string', 'qualifying-value': 'string'}
+    for attribute, Att_type in GROUP_ATTRIBUTES.items():
+        attribs += '\n<xs:attribute name = "%s" type = "xs:%s"/>' % (attribute, Att_type)
+
     return attribs
 
 

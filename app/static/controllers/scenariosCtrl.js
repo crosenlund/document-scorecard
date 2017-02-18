@@ -86,7 +86,9 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         scenID2: $scope.selectedScenario.scenId, // this will be used to return any new json data to repopulate the scenario tree
                         //----------GROUP----------------------------------
                         groupName: result.scenario.groupName,
-                        newGroupName: result.scenario.newGroupName,
+                        newGroupName: result.scenario.name,
+                        qualifyingField: result.scenario.qualifyingField,
+                        qualifyingValue: result.scenario.qualifyingValue,
                         groupID: result.scenario.groupId
                     }));
                 } else if (action.indexOf('Field') > -1) { //limits the jsonData being sent when performing an action for a field
@@ -96,7 +98,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         scenID2: $scope.selectedScenario.scenId,
                         //----------GROUP----------------------------------
                         groupName: result.scenario.groupName,
-                        newGroupName: result.scenario.newGroupName,
+                        newGroupName: result.scenario.name,
                         groupID: result.scenario.groupId,
                         //----------FIELD----------------------------------
                         fieldName: result.scenario.fieldName,
@@ -192,7 +194,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                 else if (result.action == 'addGroup') {
                     groupsFactory.addGroup(jsonData).success(function (data) {
                         $scope.currentScenario = data;
-                        feedbackService.addMessage('Field successfully added', '200');
+                        feedbackService.addMessage('Group successfully added', '200');
                     })
                         .error(function (result, status) {
                             feedbackService.addMessage(result, status);
@@ -201,7 +203,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                 } else if (result.action == 'editGroup') {
                     groupsFactory.editGroup(jsonData).success(function (data) {
                         $scope.currentScenario = data;
-                        feedbackService.addMessage('Field successfully edited', '200');
+                        feedbackService.addMessage('Group successfully edited', '200');
                     })
                         .error(function (result, status) {
                             feedbackService.addMessage(result, status);
@@ -210,7 +212,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                 } else if (result.action == 'removeGroup') {
                     groupsFactory.removeGroup(jsonData).success(function (data) {
                         $scope.currentScenario = data;
-                        feedbackService.addMessage('Field successfully removed', '200');
+                        feedbackService.addMessage('Group successfully removed', '200');
                     })
                         .error(function (result, status) {
                             feedbackService.addMessage(result, status);
