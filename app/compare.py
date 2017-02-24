@@ -52,6 +52,7 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
     missing_data = []
     file_tree = None
 
+    # get data from file as lxml etree
     with open(app.config['UPLOAD_FOLDER'] + "/" + file) as xml_file:
         parsing = etree.XMLParser(ns_clean=True)
         try:
@@ -67,19 +68,24 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
             results.append({'errors': errors})
             return results
 
+    # ----------
+    # copy etrees for use
+    scen_tree_copy = scen_tree
+    file_tree_copy = file_tree
+
+    # process_nodes(scen_tree_copy, file_tree_copy, validate_data, 0, 0)
+
     # start with the scenario data and compare to the data in the test file
     for scenario_node in scen_tree.iter():
         scenario_node_path = utilities.clean_xml_path(scen_tree.getpath(scenario_node))
         if scenario_node.getparent() is None:  # skip the root node
             continue
-        if len(scenario_node) > 1:  # group that has children/fields
-            process_node(scenario_node)
+        if not 'score' in scenario_node.attrib:  # group that has children/fields
+            # process_nodes(scenario_node)
             continue
-        if len(scenario_node) < 1:  # field
-            node_score = 0
-            if 'score' in scenario_node.attrib:  # this should always be true, fields must have a score
-                node_score = int(scenario_node.attrib['score'])
-                total_score += node_score
+        if 'score' in scenario_node.attrib:  # field
+            node_score = int(scenario_node.attrib['score'])  # every field has to have a score
+            total_score += node_score
 
             node_found = False
             path_present = False
@@ -90,10 +96,10 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                 if scenario_node_path in file_node_path or file_node_path in scenario_node_path:
                     if validate_data:
                         path_present = True
-                        print("file_node.text:", file_node.text)
-                        print("scenario_node.text:", scenario_node.text)
+                        # print("file_node.text:", file_node.text)
+                        # print("scenario_node.text:", scenario_node.text)
                         if file_node.text == scenario_node.text:
-                            print(scenario_node_path)
+                            # print(scenario_node_path)
                             node_found = True
                         else:
                             continue
@@ -135,9 +141,10 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                         if schema_node_path in file_node_path or file_node_path in schema_node_path:
                             field_found = True
                             break
-                    # field was not found in the schema
+                    # field was not found in the schema, add to error message
                     if not field_found:
                         not_in_schema.append(file_node_path)
+    # end validate against the schema
 
     file_results['file_name'] = file
     file_results['total_score'] = total_score
@@ -145,11 +152,76 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
     file_results['missing_fields'] = missing_fields
     file_results['missing_data'] = missing_data
     file_results['not_in_schema'] = not_in_schema
-    print('-----------')
-    print(not_in_schema)
+    # print('-----------')
+    # print(not_in_schema)
     results.append(file_results)
     return file_results
 
 
-def process_node(node):
-    return True
+def process_nodes(scen_tree, file_tree, validate_data, total_score, actual_score):
+    print("process_nodes")
+    for scenario_node in scen_tree.iter():
+        scenario_node_path = utilities.clean_xml_path(scen_tree.getpath(scenario_node))
+        file_sub_tree = file_tree
+
+        qual = ''
+        value = ''
+
+        print(scenario_node_path)
+
+        # for scenario_node in scen_tree.iter():
+        #     print(scenario_node)
+        # print("-------------------")
+
+        if 'score' not in scenario_node.attrib:  # group that may have children/fields
+
+            if 'qualifying-field' in scenario_node.attrib:
+                qual = str(scenario_node.attrib['qualifying-field'])
+                # print('qual:', qual)
+            if 'qualifying-value' in scenario_node.attrib:
+                value = str(scenario_node.attrib['qualifying-value'])
+                # print('value:', value)
+
+            if qual and value:
+                # check if file has qualified group that we are looking for
+                file_sub_tree = file_tree
+
+            # create a sub tree and remove the group and children from the tree copy so we only process once
+            print("scenario_node.getparent() is not None", scenario_node.getparent() is not None)
+            if scenario_node.getparent() is not None:  # skip the root node
+                scen_sub_tree = etree.ElementTree(scenario_node)
+                # scen_sub_tree = scen_tree
+                scenario_node.getparent().remove(scenario_node)
+                process_nodes(scen_sub_tree, file_sub_tree, validate_data, total_score, actual_score)
+
+        elif 'score' in scenario_node.attrib:
+            node_score = int(scenario_node.attrib['score'])  # every field has to have a score
+            total_score += node_score
+
+            node_found = False
+            path_present = False
+            for file_node in file_tree.iter(scenario_node.tag):
+                file_node_path = utilities.clean_xml_path(file_tree.getpath(file_node))
+                # check if the strings are within each other to avoid starting with different root tags
+                # ie ItemRegistries/ItemRegistry vs ItemRegistry will be the same
+                if scenario_node_path in file_node_path or file_node_path in scenario_node_path:
+                    if validate_data:
+                        path_present = True
+                        # print("file_node.text:", file_node.text)
+                        # print("scenario_node.text:", scenario_node.text)
+                        if file_node.text == scenario_node.text:
+                            # print(scenario_node_path)
+                            node_found = True
+                        else:
+                            continue
+                    else:
+                        node_found = True
+
+                if node_found:
+                    actual_score += node_score
+                    break
+
+                    # if path_present and not node_found:
+                    #     missing_data.append([node_score, scenario_node_path])
+                    # elif not node_found:
+                    #     missing_fields.append([node_score, scenario_node_path])

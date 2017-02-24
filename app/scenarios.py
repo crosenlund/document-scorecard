@@ -368,10 +368,8 @@ def build_groups_xml(cur, id, add_to_group, group_fields):
         group_name = group_info[1]
         group_node = etree.Element(group_name)
         if group_info[2]:
-            print("qualifier-field", group_node)
             group_node.set('qualifying-field', str(group_info[2]))
         if group_info[3]:
-            print("qualifier-value", group_node)
             group_node.set('qualifying-value', str(group_info[3]))
         group_node = (build_fields_xml(cur, group_id, group_node, True))
         group_node = (build_groups_xml(cur, group_id, group_node, True))
