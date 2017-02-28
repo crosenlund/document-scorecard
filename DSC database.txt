@@ -1,0 +1,48 @@
+CREATE TABLE fields
+(
+    id BIGINT DEFAULT nextval('fields_id_seq'::regclass) PRIMARY KEY NOT NULL,
+    name VARCHAR(300),
+    score INTEGER,
+    data VARCHAR(5000),
+    not_equal BOOLEAN DEFAULT false,
+    requires VARCHAR(100)
+);
+CREATE TABLE fields_in_groups
+(
+    group_id INTEGER,
+    field_id INTEGER,
+    scenario_id INTEGER,
+    CONSTRAINT fields_in_groups_group_id_fkey FOREIGN KEY (group_id) REFERENCES groups (id),
+    CONSTRAINT fields_in_groups_field_id_fkey FOREIGN KEY (field_id) REFERENCES fields (id),
+    CONSTRAINT fields_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id)
+);
+CREATE TABLE groups
+(
+    id BIGINT DEFAULT nextval('groups_id_seq'::regclass) PRIMARY KEY NOT NULL,
+    name VARCHAR(300),
+    qualifying_value VARCHAR(100),
+    qualifying_field VARCHAR(100),
+    requires_one VARCHAR(200)
+);
+CREATE TABLE groups_in_groups
+(
+    scenario_id INTEGER,
+    parent_group_id INTEGER,
+    child_group_id INTEGER,
+    CONSTRAINT groups_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id),
+    CONSTRAINT groups_in_groups_group_id_fkey FOREIGN KEY (parent_group_id) REFERENCES groups (id),
+    CONSTRAINT groups_in_groups_child_group_id_fkey FOREIGN KEY (child_group_id) REFERENCES groups (id)
+);
+CREATE TABLE scenarios
+(
+    id BIGINT DEFAULT nextval('scenarios_id_seq'::regclass) PRIMARY KEY NOT NULL,
+    name VARCHAR(300) NOT NULL,
+    description VARCHAR(300),
+    doc_type VARCHAR(100),
+    fulfillment_type VARCHAR(100),
+    schema_name VARCHAR(100),
+    root_name VARCHAR(100),
+    date_created DATE DEFAULT now(),
+    date_modified DATE DEFAULT now()
+);
+CREATE UNIQUE INDEX scenarios_name_key ON scenarios (name);
