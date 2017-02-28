@@ -142,7 +142,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
 
             # validate that one of a set of fields is present in the group
             # allowing for multiple sets of fields to be delimited by pipe |
-            # and then delimited by comma , with in the set of fields
+            # and then delimited by comma , within the set of fields
             if requires_one:
                 print(requires_one)
                 for field_set in requires_one:
@@ -150,17 +150,20 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                     fields = field_set.split(',')
                     for field in fields:
                         print(field)
-                        #for each field in the set, set as visited
 
+                        # mark the fields/groups with in this field set as visited, so we don't process again
+                        scen_sub_tree = etree.ElementTree(scenario_node)
+                        for node in scen_sub_tree.iter():
+                            if node.tag == field:
+                                if 'visited' not in node.attrib or node.attrib['visited'] is not 'yes':
+                                    node.attrib['visited'] = 'yes'
+
+                        # determine if fields in this set are present in the group
                         for file_node in file_tree.iter(field):
                             file_node_path = utilities.clean_xml_path(file_tree.getpath(file_node))
-                            print(file_node_path)
-                            print(group_path + '/' + field)
                             if utilities.same_path(group_path + '/' + field, file_node_path):
                                 print(group_path + '/' + field)
                                 print(file_node_path)
-
-
 
             if qual and value:
                 # if the qualifying field is with in a group within, get the other groups

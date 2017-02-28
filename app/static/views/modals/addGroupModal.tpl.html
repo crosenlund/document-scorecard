@@ -18,6 +18,36 @@
                     </label>
                 </div>
             </li>
+            <li>
+                <div>
+                    <label>
+                        Qualifying Field
+                        <input type="text" name="qualifyingField" autofocus placeholder="optional: field for a qualified rep..."
+                               ng-model="newScenario.newQualifyingField" ng-pattern="/^[a-zA-Z0-9/]*$/">
+                    </label>
+                    <label ng-show="myForm.qualifyingField.$error.pattern">
+                        A qualifying field may only contain the characters: aA-zZ0-9_/
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>
+                        Qualifying Value
+                        <input type="text" name="qualifyingValue" placeHolder="optional: value for a qualified rep..."
+                               ng-model="newScenario.newQualifyingValue">
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label>
+                        Requires One
+                        <input type="text" name="requiresOne" placeHolder="optional: require one of a set of fields..."
+                               ng-model="newScenario.newRequiresOne">
+                    </label>
+                </div>
+            </li>
         </ul>
     </form>
     <ul class="form-actions">
