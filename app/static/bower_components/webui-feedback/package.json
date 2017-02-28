@@ -1,0 +1,43 @@
+{
+  "name": "webui-feedback",
+  "description": "Angular component for SPS styled feedback alert messages",
+  "version": "1.0.6",
+  "main": "source/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SPSCommerce/webui-feedback.git"
+  },
+  "author": "Commerce Platform",
+  "license": "ISC",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/SPSCommerce/webui-feedback/issues"
+  },
+  "homepage": "https://github.com/SPSCommerce/webui-feedback#readme",
+  "jspm": {
+    "main": "index.js",
+    "directories": {
+      "lib": "source"
+    },
+    "dependencies": {
+      "angular": "github:angular/bower-angular@1.4.8",
+      "css": "github:systemjs/plugin-css@0.1",
+      "jquery": "github:components/jquery@2.1.4",
+      "lodash": "npm:lodash@3.10",
+      "text": "github:systemjs/plugin-text@0.0",
+      "webui-core": "github:SPSCommerce/webui-core@2"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "clean-css": "npm:clean-css@^3.4.6",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "jspm": "^0.16.31",
+    "karma": "^0.13.14",
+    "webui-buildtools": "github:spscommerce/webui-buildtools"
+  }
+}

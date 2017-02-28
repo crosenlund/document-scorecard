@@ -1,0 +1,16 @@
+
+*~
+.DS_Store
+*.pyc
+*.iml
+.idea
+jspm
+temp/
+gh-pages/
+docs/build
+test/reports
+node_modules
+jspm_packages
+bower_components
+/test/reports/*
+bundle.js

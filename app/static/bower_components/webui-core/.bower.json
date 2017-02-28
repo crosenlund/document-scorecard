@@ -1,0 +1,34 @@
+{
+  "name": "webui-core",
+  "version": "2.3.1",
+  "authors": [
+    "Commerce Platform"
+  ],
+  "description": "SPS Commerce Web Components and Documentation",
+  "ignore": [
+    "docs",
+    "test"
+  ],
+  "main": [
+    "dist/webui-core.min.js",
+    "dist/webui-core.min.css"
+  ],
+  "dependencies": {
+    "angular": "1.4.8",
+    "jquery": "2.1.4",
+    "lodash": "3.10.1"
+  },
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "https://github.com/SPSCommerce/webui-core",
+  "private": true,
+  "_release": "2.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.3.1",
+    "commit": "63a25ff886e3755454a157c83c3f398f1cf032b1"
+  },
+  "_source": "git@github.com:SPSCommerce/webui-core.git",
+  "_target": "*",
+  "_originalSource": "git@github.com:SPSCommerce/webui-core.git"
+}

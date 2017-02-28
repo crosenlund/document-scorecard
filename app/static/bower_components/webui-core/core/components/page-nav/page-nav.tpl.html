@@ -1,0 +1,10 @@
+<div class="content-wrapper">
+    <h1 class="left"><a ui-sref="{{::vm.titleState}}" ng-bind="::vm.title"></a></h1>
+    <ul class="page-nav-items inline-list left" ng-if="vm.items && vm.items.length > 0">
+        <li ng-repeat="item in vm.items" ng-attr-ui-sref-active="{{::item.state ? 'active' : undefined}}">
+            <a ng-if="::item.url" ng-href="{{::item.url}}" ng-bind="::item.name"></a>
+            <a ng-if="::item.state" ui-sref="{{::item.state}}" ng-bind="::item.name"></a>
+        </li>
+    </ul>
+    <ul class="right" ng-transclude></ul>
+</div>

@@ -1,0 +1,40 @@
+language: node_js
+node_js:
+- '4.4'
+
+python:
+- '2.7'
+
+rvm:
+- 2.0.0
+
+install:
+- sudo pip install boto
+- sudo pip install jinja2
+- sudo pip install semantic_version
+- sudo pip install spsbuildtools --extra-index-url https://pypi.fury.io/NqvNFCysuFzM847zBn88/spscommerce/
+
+before_script:
+- node --version
+- npm -g install npm@next
+- npm --version
+- npm install
+- gulp --version
+- jspm --version
+
+# JSPM github registry config export
+- jspm config registries.github.handler jspm-github
+- jspm config registries.github.remote https://github.jspm.io
+- jspm config registries.github.auth Y3JzdGZmcjphNjEzOTcxMDlmNzAwMzdjMmVmZWY5MDg5Njg2NTU3MGZlN2RhOGYx
+
+- jspm install
+
+script:
+- gulp test
+- gulp dist
+- python deploy.py
+
+env:
+  global:
+    - secure: "KiIgMGIRc30xJML/SeskhOT8dsDllM4zJ+xthOftNOX8sRau3KYkWbMhcK8T5bCMQ+M87kSifN1gYOOTdzOwQhX4nQ7T7O3iB4Q/kkLmf6tMlRTm19g5HYos8VK+8HdRvKhyDxWMPFuqI0Yr48aAxOyD1B/uBM2FCSD2bKB7VEM="
+    - secure: "nORV5TYrMWlo2MNXplDCX+oHtcOhm6i3J9CQEvvzYUj4FHOPllhmp6zeqCxU9zwgFv+Cs0s8gi6K2zx/1SgcR21GD/U4iAnvtutgXAVo/VI9QOVVZI78Mh4jvYJ3PH2HzQg8QXmMlzhT+BUYQXj4evTZd837r2c5uhSRkjBO8Cg="

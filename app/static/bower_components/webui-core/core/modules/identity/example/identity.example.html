@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Identity Module</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <style>[ng-cloak] {visibility: hidden;}</style>
+    <script src="/jspm_packages/system.js"></script>
+    <script>System.config({baseURL: '/'});</script>
+    <script src="/config.js"></script>
+    <script>
+        System.import('./identity.example').then(function (app) {
+            angular.bootstrap(document, [app.name]);
+        });
+    </script>
+    <style>
+        button.align-with-input,
+        button.align-with-input:hover,
+        button.align-with-input:focus {
+             margin-top: 1.35em;
+        }
+        button .spinnerContainer {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 3px;
+        }
+    </style>
+</head>
+<body ng-cloak ng-controller="AppController as ctrl">
+<spsui-application class="centered">
+    <spsui-viewport>
+        <div class="row">
+            <div class="small-16 columns">
+                <h1>Identity Module Example</h1>
+                <p>
+                    <label>
+                        Paste an Access Token
+                        <textarea ng-model="ctrl.token"></textarea>
+                    </label>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-3 columns">
+                <p>
+                    <label>
+                        Select Identity Environment
+                        <select ng-model="ctrl.env" ng-change="ctrl.setEnv(ctrl.env)">
+                            <option>dev</option>
+                            <option>test</option>
+                            <option>stage</option>
+                            <option>prod</option>
+                        </select>
+                    </label>
+                </p>
+            </div>
+            <div class="small-4 end columns">
+                <p>
+                    <button type="button"
+                            ng-click="ctrl.whoami(ctrl.token)"
+                            class="align-with-input confirm"
+                            submit-toggle="ctrl.waiting">WHOAMI</button>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-10 columns">
+                <p ng-if="ctrl.result.success">
+                    You are: {{ctrl.result.success.first_name}} {{ctrl.result.success.last_name}}
+                    of {{ctrl.result.success.organization.organization_name}}
+                </p>
+                <p ng-if="ctrl.result.error">
+                    Token does not validate in the environment you have selected.
+                </p>
+            </div>
+        </div>
+    </spsui-viewport>
+</spsui-application>
+</body>
+</html>

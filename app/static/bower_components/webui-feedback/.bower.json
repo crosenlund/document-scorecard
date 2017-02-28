@@ -1,0 +1,33 @@
+{
+  "name": "webui-feedback",
+  "version": "1.0.6",
+  "homepage": "https://github.com/SPSCommerce/webui-feedback",
+  "authors": [
+    "Commerce Platform"
+  ],
+  "description": "Angular component for SPS styled feedback alert messages",
+  "main": [
+    "dist/bundle.min.js",
+    "dist/bundle.min.css"
+  ],
+  "moduleType": [],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "jspm_packages",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "1.0.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.6",
+    "commit": "9b59cf867dd8848c9ddf8f73661abdc7ea146384"
+  },
+  "_source": "git@github.com:SPSCommerce/webui-feedback.git",
+  "_target": "^1.0.6",
+  "_originalSource": "git@github.com:SPSCommerce/webui-feedback.git"
+}

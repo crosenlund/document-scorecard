@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Example</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <style>body {visibility: hidden;}</style>
+    <script src="/jspm_packages/system.js"></script>
+    <script src="/config.js"></script>
+    <script>
+        System.import('./example').then(function (module) {
+            angular.bootstrap(document, [module.name]);
+        });
+    </script>
+</head>
+<body>
+
+    <section class="content-section">
+        <div class="small-16 large-10 large-offset-3 columns content">
+
+            <div class="row">
+                <div class="small-16 large-16">
+
+                    <h2>Feedback Message Factory</h2>
+
+                    <p class="large-16">
+                        Feedback messages can be created dynamically using the Feedback Factory and Container.
+                    </p>
+
+                    <div ng-controller="FactoryExample as example">
+
+                        <!-- This is the Growl-style feedback container -->
+
+                        <spsui-feedback-container class="growl" feedback-id="myGrowler"></spsui-feedback-container>
+
+                        <div class="row">
+
+                            <div class="small-2 columns">
+                                <label>Type
+                                    <select ng-model="example.selected.type">
+                                        <option value="random">Random</option>
+                                        <option value="info">Info</option>
+                                        <option value="success">Success</option>
+                                        <option value="warning">Warning</option>
+                                        <option value="error">Error</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div class="small-4 columns">
+                                <label>Message
+                                    <input ng-model="example.selected.text" type="text"/>
+                                </label>
+                            </div>
+
+                            <div class="small-2 columns">
+                                <label>Label
+                                    <input ng-model="example.selected.label" type="text" placeholder="Default"/>
+                                </label>
+                            </div>
+
+                            <div class="small-2 columns">
+                                <label>Icon
+                                    <div class="switch">
+                                        <input ng-model="example.selected.icon" id="iconbox" type="checkbox">
+                                        <label for="iconbox"></label>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="small-2 columns">
+                                <label>Closeable
+                                    <div class="switch">
+                                        <input ng-model="example.selected.closeable" id="closebox" type="checkbox">
+                                        <label for="closebox"></label>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="small-2 columns">
+                                <label>Flash
+                                    <div class="switch">
+                                        <input ng-model="example.selected.flash" id="flashbox" type="checkbox">
+                                        <label for="flashbox"></label>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="small-2 columns">
+                                <label>Growl
+                                    <div class="switch">
+                                        <input ng-model="example.growl" id="growlbox" type="checkbox">
+                                        <label for="growlbox"></label>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="small-6 end columns">
+                                <a class="button" ng-click="example.addMessage()">Add Message</a>
+                                <a class="button" ng-click="example.addSuccess()">Add Success</a>
+                                <a class="button" ng-click="example.clearMessages()">Clear All</a>
+                            </div>
+                        </div>
+
+                        <!-- This is a regular inline feedback container -->
+
+                        <spsui-feedback-container class="pad-top" feedback-id="myMessages"></spsui-feedback-container>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+
+                <h2>Permanent Feedback Messages</h2>
+
+                <p>These messages can not be removed or closed by the user.</p>
+
+                <spsui-feedback-msg type="tip">This is a Tip</spsui-feedback-msg>
+                <spsui-feedback-msg type="success">This is a Success Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="info">This is an Info Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="warning">This is a Warning Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="error">This is an Error Message</spsui-feedback-msg>
+
+                <hr>
+
+                <h2>Closeable Feedback Messages</h2>
+
+                <p>These messages can be closed by clicking on the X.</p>
+
+                <spsui-feedback-msg closeable type="success">This is a Success Message</spsui-feedback-msg>
+                <spsui-feedback-msg closeable type="info">This is an Info Message</spsui-feedback-msg>
+                <spsui-feedback-msg closeable type="warning">This is a Warning Message</spsui-feedback-msg>
+                <spsui-feedback-msg closeable type="error">This is an Error Message</spsui-feedback-msg>
+
+                <hr>
+
+                <h2>Custom Labels</h2>
+
+                <p>Messages can have custom labels to go along with the text.</p>
+
+                <spsui-feedback-msg type="success" label="Great job!">
+                    You're all set now.
+                </spsui-feedback-msg>
+
+                <spsui-feedback-msg type="info" label="Mark your calendars!">
+                    On January 1st, the new SPS Commerce mobile app will be available for download.
+                </spsui-feedback-msg>
+
+                <spsui-feedback-msg type="warning" label="You should know:">
+                    We'll be performing a system maintenance check October 10, between 1:00-3:00am.
+                </spsui-feedback-msg>
+
+                <spsui-feedback-msg type="error" label="Address field is blank.">
+                    Please enter your information and we’ll get you back on track.
+                </spsui-feedback-msg>
+
+                <hr>
+
+                <h2>Custom Icons</h2>
+
+                <p>Messages can have custom icons, just use the Font Awesome classes.</p>
+
+                <spsui-feedback-msg type="success" icon="fa-thumbs-o-up">This is a Success Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="info" icon="fa-diamond">This is an Info Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="warning" icon="fa-support">This is a Warning Message</spsui-feedback-msg>
+                <spsui-feedback-msg type="error" icon="fa-user-times">This is an Error Message</spsui-feedback-msg>
+
+                <hr>
+
+                <h2>No Icons</h2>
+
+                <p>Messages can be iconless, just pass an empty string for the icon.</p>
+
+                <spsui-feedback-msg noicon type="success">This is a Success Message</spsui-feedback-msg>
+                <spsui-feedback-msg noicon type="info">This is an Info Message</spsui-feedback-msg>
+                <spsui-feedback-msg noicon type="warning">This is a Warning Message</spsui-feedback-msg>
+                <spsui-feedback-msg noicon type="error">This is an Error Message</spsui-feedback-msg>
+
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

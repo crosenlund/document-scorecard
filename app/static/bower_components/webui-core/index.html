@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebUI Core</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <style>[ng-cloak] {visibility: hidden;}</style>
+    <script src="jspm_packages/system.js"></script>
+    <script>System.config({baseURL: '.'});</script>
+    <script src="config.js"></script>
+    <script>
+        System.import('webui-core').then(function (app) {
+            app.run(function($rootScope, tokenService) {
+                $rootScope.token = tokenService.token || 'ABCD1234';
+            });
+            angular.bootstrap(document, [app.name]);
+        });
+    </script>
+</head>
+<body ng-cloak>
+<spsui-application class="centered">
+    <spsui-viewport>
+        <div class="columns">
+            <h1>Core Components</h1>
+            <p>
+                <a href="core/components/page-nav/example/page-nav.example.html?access_token={{token}}">Page Navigation Example</a>
+                <br><small>Includes Page Navigation, Viewport and Footer</small>
+            </p>
+            <p>
+                <a href="core/components/sidebar/example/sidebar.example.html?access_token={{token}}">Sidebar Example</a>
+                <br><small>Includes Pagetitle, Viewport and Footer</small>
+            </p>
+
+            <h1>Core Modules</h1>
+            <p>
+                <a href="core/modules/datetime/example/datetime.example.html?access_token={{token}}">DateTime Module Example</a>
+                <br><small>Demonstrate Filters with Localization and Timezone Support</small>
+            </p>
+            <p>
+                <a href="core/modules/token/example/token.example.html?access_token={{token}}">Token Module Example</a>
+                <br><small>Demonstrates a working token capture & injector</small>
+            </p>
+            <p>
+                <a href="core/modules/identity/example/identity.example.html?access_token={{token}}">Identity Module Example</a>
+                <br><small>Demonstrates identity service integration and token identification</small>
+            </p>
+            <p>
+                <a href="core/modules/intercom/example/intercom.example.html?access_token={{token}}">Intercom Module Example</a>
+                <br><small>Demonstrates Intercom Messenger integration</small>
+            </p>
+        </div>
+    </spsui-viewport>
+</spsui-application>
+</body>
+</html>
