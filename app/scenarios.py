@@ -25,12 +25,12 @@ def close(cur, conn):
 
 
 # add a new field to a specified scenario
-def add_field(scen_id, name, score, data, not_equal):
+def add_field(scen_id, name, score, data, not_equal, requires):
     cur, conn = connect_to_db()
     field_id = -1
 
     if existing_scenario(scen_id, None):
-        field_id = fields.create_field(cur, name, score, data, not_equal)
+        field_id = fields.create_field(cur, name, score, data, not_equal, requires)
 
         cur.execute(
             "INSERT INTO fields_in_groups (scenario_id, group_id, field_id) VALUES (%s, %s, %s);"
@@ -43,18 +43,18 @@ def add_field(scen_id, name, score, data, not_equal):
     close(cur, conn)
 
     if field_id is not -1:
-        logging.info("successfully added scenario '%r' (id = %r, %r, %r, %r, %r)"
-                     % (name, scen_id, name, score, data, not_equal))
+        logging.info("successfully added scenario '%r' (id = %r, %r, %r, %r, %r, %r)"
+                     % (name, scen_id, name, score, data, not_equal, requires))
 
     return field_id
 
 
 # add a new group to the database
-def add_group(scen_id, name, qualifier, qualifier_field):
+def add_group(scen_id, name, qualifying_value, qualifying_field, requires_one):
     cur, conn = connect_to_db()
     new_id = -1
     if existing_scenario(scen_id, None):
-        new_id = groups.create_group(cur, name, qualifier, qualifier_field)
+        new_id = groups.create_group(cur, name, qualifying_value, qualifying_field, requires_one)
 
         if not groups.existing_group(new_id):
             cur.execute(
@@ -72,7 +72,7 @@ def add_group(scen_id, name, qualifier, qualifier_field):
 
     if 'new_id' is not -1:
         logging.info("successfully added group '" + name + "' (id = " + str(new_id) + ", " +
-                     " " + name + ", " + qualifier + "," + qualifier_field + ")")
+                     " " + name + ", " + qualifying_value + "," + qualifying_field + "," + requires_one + ")")
 
     return new_id
 
@@ -371,6 +371,8 @@ def build_groups_xml(cur, id, add_to_group, group_fields):
             group_node.set('qualifying-field', str(group_info[2]))
         if group_info[3]:
             group_node.set('qualifying-value', str(group_info[3]))
+        if group_info[4]:
+            group_node.set('requires-one', str(group_info[4]))
         group_node = (build_fields_xml(cur, group_id, group_node, True))
         group_node = (build_groups_xml(cur, group_id, group_node, True))
         add_to_group.append(group_node)
@@ -399,6 +401,8 @@ def build_fields_xml(cur, id, group, group_field):
         field_node.text = field_info[3]
         if field_info[4]:
             field_node.set('not_equal', str(field_info[4]))
+        if field_info[5]:
+            field_node.set('requires', str(field_info[5]))
         group.append(field_node)
     return group
 
@@ -467,19 +471,19 @@ def build_groups_json(cur, id, group_fields):
         if fields_built:
             if groups_built:
                 group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
-                                   "qualifyingValue": group_info[3], "groups": groups_built,
+                                   "qualifyingValue": group_info[3], "requiresOne": group_info[4], "groups": groups_built,
                                    "fields": fields_built})
             if not groups_built:
                 group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
-                                   "qualifyingValue": group_info[3], "fields": fields_built})
+                                   "qualifyingValue": group_info[3], "requiresOne": group_info[4], "fields": fields_built})
 
         if not fields_built:
             if groups_built:
                 group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
-                                   "qualifyingValue": group_info[3], "groups": groups_built})
+                                   "qualifyingValue": group_info[3], "requiresOne": group_info[4], "groups": groups_built})
             if not groups_built:
                 group_list.append({"groupId": group_info[0], "name": group_info[1], "qualifyingField": group_info[2],
-                                   "qualifyingValue": group_info[3]})
+                                   "qualifyingValue": group_info[3], "requiresOne": group_info[4]})
 
     return group_list
 
@@ -503,6 +507,6 @@ def build_fields_json(cur, id, group_field):
         field_info = cur.fetchone()
         field_list.append(
             {"fieldId": field_info[0], "name": field_info[1], "score": field_info[2], "data": field_info[3],
-             "notEqual": field_info[4]})
+             "notEqual": field_info[4], "requires": field_info[5]})
 
     return field_list

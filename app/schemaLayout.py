@@ -57,8 +57,7 @@ def add_attributes():
     logging.info("add_attributes")
     attribs = ''
     ATTRIBUTE_TYPES = {'string'}
-    ATTRIBUTES = {'score': 'int', 'qualified-rep': 'string', 'requires-one': 'string', 'not-equal': 'string',
-                  'requires-others': 'string'}
+    ATTRIBUTES = {'score': 'int', 'requires': 'string', 'not-equal': 'string'}
     for attribtypes in ATTRIBUTE_TYPES:
         attribs = '<xs:complexType name = "attributes-%s">\n<xs:simpleContent>\n<xs:extension base = "xs:%s">\n' \
                   % (attribtypes, attribtypes)
@@ -72,7 +71,7 @@ def add_attributes():
 def add_group_attributes():
     attribs = ''
 
-    GROUP_ATTRIBUTES = {'qualifying-field': 'string', 'qualifying-value': 'string'}
+    GROUP_ATTRIBUTES = {'qualifying-field': 'string', 'qualifying-value': 'string', 'requires-one': 'string'}
     for attribute, Att_type in GROUP_ATTRIBUTES.items():
         attribs += '\n<xs:attribute name = "%s" type = "xs:%s"/>' % (attribute, Att_type)
 

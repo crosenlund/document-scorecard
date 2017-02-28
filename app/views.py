@@ -123,7 +123,8 @@ def copy_scenario():
             logging.info("Scenario " + str(scen_id) + " was successfully copied.")
             return get_scenario_list()
         else:
-            return make_response("Unable to copy scenario (" + str(scen_id) + ").  " + error + " " + new_error + "", 400)
+            return make_response("Unable to copy scenario (" + str(scen_id) + ").  " + error + " " + new_error + "",
+                                 400)
 
 
 # renames a scenario that already exists
@@ -282,15 +283,18 @@ def add_group():
         qualifying_field = ''
         if 'qualifyingValue' in request.json:
             qualifying_field = request.json['qualifyingValue']
+        requires_one = ''
+        if 'requires-one' in request.json:
+            requires_one = request.json['requires-one']
 
         if scen_id:
-            success = scenarios.add_group(scen_id, group_name, qualifying_value, qualifying_field)
+            success = scenarios.add_group(scen_id, group_name, qualifying_value, qualifying_field, requires_one)
         elif group_id:
-            success = groups.add_group(group_id, group_name, qualifying_value, qualifying_field)
+            success = groups.add_group(group_id, group_name, qualifying_value, qualifying_field, requires_one)
 
         if success:
             logging.info("successfully added group '" + group_name + "' (scenario id = " + str(scen_id) + ", " +
-                         " " + group_name + ", " + qualifying_value + "," + qualifying_field + ")")
+                         " " + group_name + ", " + qualifying_value + "," + qualifying_field + ", " + requires_one + ")")
 
             return scenario_json(scen_id_for_json)
         else:
@@ -331,13 +335,16 @@ def edit_group():
         qualifying_field = ''
         if 'qualifyingValue' in request.json:
             qualifying_field = request.json['qualifyingValue']
+        requires_one = ''
+        if 'requires-one' in request.json:
+            requires_one = request.json['requires-one']
 
-        success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field)
+        success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field, requires_one)
 
         if success:
             logging.info(
                 "successfully edited group with id = '" + str(group_id) + "'(scenario id = " + str(
-                    scen_id_for_json) + ", " + " " + group_name + ", " + qualifying_value + "," + qualifying_field + ")")
+                    scen_id_for_json) + ", " + " " + group_name + ", " + qualifying_value + ", " + qualifying_field + ", " + requires_one + ")")
 
             return scenario_json(scen_id_for_json)
         else:
@@ -364,12 +371,15 @@ def add_field():
         data = ''
         if 'data' in request.json:
             data = request.json['data']
+        requires = ''
+        if 'requires' in request.json:
+            requires = request.json['requires']
 
         success = False
         if scen_id:
-            success = scenarios.add_field(scen_id, field_name, score, data, notEqual)
+            success = scenarios.add_field(scen_id, field_name, score, data, notEqual, requires)
         elif group_id:
-            success = groups.add_field(group_id, field_name, score, data, notEqual)
+            success = groups.add_field(group_id, field_name, score, data, notEqual, requires)
 
         if success:
             logging.info("successfully added field '%r' (scenario id = %r, %r, %r, %r, %r)" %
@@ -411,13 +421,16 @@ def edit_field():
         data = ''
         if 'data' in request.json:
             data = request.json['data']
+        requires = ''
+        if 'requires' in request.json:
+            requires = request.json['requires']
 
-        success = fields.edit_field(field_id, field_name, score, data, notEqual)
+        success = fields.edit_field(field_id, field_name, score, data, notEqual, requires)
 
         if success:
             logging.info(
-                "successfully edited field with id = '%r'(scenario id = %r, %r, %r, %r, %r)"
-                % (field_id, scen_id_for_json, field_name, score, data, notEqual))
+                "successfully edited field with id = '%r'(scenario id = %r, %r, %r, %r, %r, %r)"
+                % (field_id, scen_id_for_json, field_name, score, data, notEqual, requires))
 
             return scenario_json(scen_id_for_json)
         else:

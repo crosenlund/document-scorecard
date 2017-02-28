@@ -14,7 +14,7 @@ def build_scenario(scenario_info, scenario_data):
     schema_name = ''
     doc_type = ''
     date_created = ''
-    print(scenario_info)
+    # print(scenario_info)
 
     # parsing the scenario_info so that we can add a scenario using the info later
     for (v, info) in scenario_info.items():
@@ -26,7 +26,7 @@ def build_scenario(scenario_info, scenario_data):
             description = info
         if v == 'fulfillmentType':
             fulfillment_type = info
-        if v == 'schemaName':
+        if v == 'schema':
             schema_name = info
         if v == 'docType':
             doc_type = info
@@ -97,23 +97,27 @@ def find_root(root_name, scenario_data):
 def create_groups(scenario_id, group_id, groups_data):
     for g in groups_data:
         name = g['name']  # name will always be sent
-        if 'qualifier_data' in g:
-            qualifier_data = g['qualifier_data']
+        if 'qualifying_value' in g:
+            qualifying_value = g['qualifying_value']
         else:
-            qualifier_data = ''
-        if 'qualifier' in g:
-            qualifier = g['qualifier']
+            qualifying_value = ''
+        if 'qualifying_field' in g:
+            qualifying_field = g['qualifying_field']
         else:
-            qualifier = ''
+            qualifying_field = ''
+        if 'requires_one' in g:
+            requires_one = g['requires_one']
+        else:
+            requires_one = ''
 
         # create the group from the information gathered above
         # add the group to another group if group_id is present
         if group_id:
-            new_group_id = groups.add_group(group_id, name, qualifier, qualifier_data)
+            new_group_id = groups.add_group(group_id, name, qualifying_field, qualifying_value, requires_one)
             logging.info("adding group " + name + " to group " + str(new_group_id))
         # else add the group to the scenario if scenario_id is present
         elif scenario_id:
-            new_group_id = scenarios.add_group(scenario_id, name, qualifier, qualifier_data)
+            new_group_id = scenarios.add_group(scenario_id, name, qualifying_field, qualifying_value, requires_one)
             logging.info("adding group " + name + " to scenario " + str(scenario_id))
 
         if 'fields' in g:
@@ -130,23 +134,24 @@ def create_fields(scenario_id, group_id, fields_data):
         name = f['name']
         # score will always be sent
         score = f['score']
+        data = ''
         if 'data' in f:
             data = f['data']
-        else:
-            data = ''
+        not_equal = ''
         if 'not_equal' in f:
             not_equal = f['not_equal']
-        else:
-            not_equal = ''
+        requires = ''
+        if 'requires' in f:
+            requires = f['requires']
 
         # create a new field based on the above information
         # add to the group if group_id has data
         if group_id:
-            groups.add_field(group_id, name, score, data, not_equal)
+            groups.add_field(group_id, name, score, data, not_equal, requires)
             logging.info("adding field " + name + " to group " + str(group_id))
         # else add to the scenario if scenario_id has data
         elif scenario_id:
-            scenarios.add_field(scenario_id, name, score, data, not_equal)
+            scenarios.add_field(scenario_id, name, score, data, not_equal, requires)
             logging.info("adding field " + name + " to scenario " + str(scenario_id))
 
 

@@ -19,11 +19,11 @@ def close(cur, conn):
 
 
 # create a new field
-def create_field(cur, name, score, data, not_equal):
+def create_field(cur, name, score, data, not_equal, requires):
     if not not_equal:
         not_equal = False
-    cur.execute("INSERT INTO fields (name, score, data, not_equal) VALUES (%s, %s, %s, %s) RETURNING id",
-                (name, score, data, not_equal))
+    cur.execute("INSERT INTO fields (name, score, data, not_equal, requires) VALUES (%s, %s, %s, %s, %s) RETURNING id",
+                (name, score, data, not_equal, requires))
     return cur.fetchone()[0]
 
 
@@ -45,7 +45,7 @@ def delete_field(id):
 
 
 # edit a field's info
-def edit_field(id, name, score, data, not_equal):
+def edit_field(id, name, score, data, not_equal, requires):
 
     cur, conn = connect_to_db()
 
@@ -53,8 +53,9 @@ def edit_field(id, name, score, data, not_equal):
                 "name = %r, "
                 "score = %r, "
                 "data = %r,"
-                "not_equal = %r"
-                " where id = %r;" % (name, score, data, not_equal, id))
+                "not_equal = %r,"
+                "requires = %r"
+                " where id = %r;" % (name, score, data, not_equal, requires, id))
 
     commit(conn)
     close(cur, conn)

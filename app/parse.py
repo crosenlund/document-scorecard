@@ -82,29 +82,37 @@ def process_node(parent_node):
 
 # a helper method that builds groups for the scenario json data
 def build_group(node):
-    if 'qual-field' in node.attrib:
-        qual_field = node.attrib['qual-field']
+    print(node.attrib)
+    if 'qualifying-field' in node.attrib:
+        qualifying_field = node.attrib['qualifying-field']
     else:
-        qual_field = ''
+        qualifying_field = ''
 
-    if 'qual' in node.attrib:
-        qual = node.attrib['qual']
+    if 'qualifying-value' in node.attrib:
+        qualifying_value = node.attrib['qualifying-value']
     else:
-        qual = ''
+        qualifying_value = ''
+
+    requires_one = ''
+    if 'requires-one' in node.attrib:
+        requires_one = node.attrib['requires-one']
 
     fields, groups = process_node(node)
 
     if fields:
         if groups:
-            return {"name": node.tag, "qualifier": qual_field, "qualifier_data": qual, "fields": fields,
-                    "groups": groups}
+            return {"name": node.tag, "qualifying_field": qualifying_field, "qualifying_value": qualifying_value,
+                    'requires_one': requires_one, "fields": fields, "groups": groups}
         if not groups:
-            return {"name": node.tag, "qualifier": qual_field, "qualifier_data": qual, "fields": fields}
+            return {"name": node.tag, "qualifying_field": qualifying_field, "qualifying_value": qualifying_value,
+                    'requires_one': requires_one, "fields": fields}
     if not fields:
         if groups:
-            return {"name": node.tag, "qualifier": qual_field, "qualifier_data": qual, "groups": groups}
+            return {"name": node.tag, "qualifying_field": qualifying_field, "qualifying_value": qualifying_value,
+                    'requires_one': requires_one, "groups": groups}
         if not groups:
-            return {"name": node.tag, "qualifier": qual_field, "qualifier_data": qual}
+            return {"name": node.tag, "qualifying_field": qualifying_field, "qualifying_value": qualifying_value,
+                    'requires_one': requires_one}
 
 
 # helper method to take in individual fields/leaves and give back a dict with the field's xpath, score,
@@ -115,15 +123,14 @@ def build_field(node):
     name = node.tag
     data = node.text
     score = node.attrib['score']
-    attribute_string = ''
-    attributes = node.attrib
-    for attr in attributes:
-        if attribute_string:
-            attribute_string = attribute_string + '|' + attr + '==' + node.attrib[attr]
-        else:
-            attribute_string = attr + '==' + node.attrib[attr]
+    not_equal = False
+    if 'not-equal' in node.attrib:
+        not_equal = True
+    requires = ''
+    if 'requires' in node.attrib:
+        requires = node.attrib['requires']
 
-    return {'name': name, 'score': score, 'data': data, 'attributes': attribute_string}
+    return {'name': name, 'score': score, 'data': data, 'not_equal': not_equal, 'requires': requires}
 
 
 def input(file_name):

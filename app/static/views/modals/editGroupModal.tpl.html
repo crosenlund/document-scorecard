@@ -23,7 +23,7 @@
                     <label>
                         Qualifier Field
                         <input type="text" name="qualifyingField" placeHolder="add a qualifying field..."
-                               ng-model="newScenario.qualifyingField" ng-pattern="/^[a-zA-Z0-9_]*$/">
+                               ng-model="newScenario.qualifyingField" ng-pattern="/^[a-zA-Z0-9_/]*$/">
                     </label>
                     <label ng-show="myForm.qualifyingField.$error.pattern">
                         A field name may not contain a space or special characters

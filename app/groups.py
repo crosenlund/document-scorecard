@@ -21,12 +21,12 @@ def close(cur, conn):
 
 
 # add a new field a specified group
-def add_field(group_id, name, score, data, not_equal):
+def add_field(group_id, name, score, data, not_equal, requires):
 
     cur, conn = connect_to_db()
     field_id = -1
     if existing_group(group_id):
-        field_id = fields.create_field(cur, name, score, data, not_equal)
+        field_id = fields.create_field(cur, name, score, data, not_equal, requires)
 
         cur.execute(
             "INSERT INTO fields_in_groups (scenario_id, group_id, field_id) VALUES (%s, %s, %s);"
@@ -39,18 +39,18 @@ def add_field(group_id, name, score, data, not_equal):
     close(cur, conn)
 
     if 'new_id' is not -1:
-        logging.info("successfully added field '%r' (id = %r, %r, %r, %r, %r)" % (name, field_id, name, score, data, not_equal))
+        logging.info("successfully added field '%r' (id = %r, %r, %r, %r, %r, %r)" % (name, field_id, name, score, data, not_equal, requires))
 
     return field_id
 
 
 # add a new group to the database
-def add_group(group_id, name, qualifying_value, qualifier_field):
+def add_group(group_id, name, qualifying_value, qualifying_field, requires_one):
     cur, conn = connect_to_db()
     new_id = -1
     error = ''
     if existing_group(group_id):
-        new_id = create_group(cur, name, qualifying_value, qualifier_field)
+        new_id = create_group(cur, name, qualifying_value, qualifying_field, requires_one)
 
         if not existing_group(new_id):
             cur.execute(
@@ -68,15 +68,15 @@ def add_group(group_id, name, qualifying_value, qualifier_field):
 
     if 'new_id' is not -1:
         logging.info("successfully added group '" + name + "' (id = " + str(new_id) + ", " +
-                     " " + name + ", " + qualifying_value + "," + qualifier_field + ")")
+                     " " + name + ", " + qualifying_value + ", " + qualifying_field + ", " + requires_one + ")")
 
     return new_id
 
 
 # create a new group
-def create_group(cur, name, qualifying_value, qualifying_field):
-    cur.execute("INSERT INTO groups (name, qualifying_value, qualifying_field) VALUES (%s, %s, %s) RETURNING id",
-                (name, qualifying_value, qualifying_field))
+def create_group(cur, name, qualifying_value, qualifying_field, requires_one):
+    cur.execute("INSERT INTO groups (name, qualifying_value, qualifying_field, requires_one) VALUES (%s, %s, %s, %s) RETURNING id",
+                (name, qualifying_value, qualifying_field, requires_one))
     return cur.fetchone()[0]
 
 
@@ -98,7 +98,7 @@ def delete_group(id):
 
 
 # edit a group's info, make sure the group (by id) exists first
-def edit_group(id, name, qualifying_value, qualifying_field):
+def edit_group(id, name, qualifying_value, qualifying_field, requires_one):
     cur, conn = connect_to_db()
     success = False
 
@@ -106,7 +106,8 @@ def edit_group(id, name, qualifying_value, qualifying_field):
         cur.execute("UPDATE groups SET "
                     "name = '" + name + "', " +
                     "qualifying_value = '" + qualifying_value + "', " +
-                    "qualifying_field = '" + qualifying_field + "'" +
+                    "qualifying_field = '" + qualifying_field + "', " +
+                    "requires_one = '" + requires_one + "'" +
                     " where id = " + str(id) + ";")
         success = True
     else:

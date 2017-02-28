@@ -9,8 +9,18 @@ def file_allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
+# change a path like: /MasterItemAttribute[10]/ItemAttributeItem/AttributeQualifier  (many reps of MasterItemAttribute)
+#                 to: /MasterItemAttribute/ItemAttributeItem/AttributeQualifier
 def clean_xml_path(path):
     return re.sub("\\[\d{1,6}\\]", "", path)
+
+
+# determine if two paths are the same minus plural root tag if present
+# check if the strings are within each other to avoid starting with different root tags
+# ie ItemRegistries/ItemRegistry vs ItemRegistry will be the same
+def same_path(path1, path2):
+    return path1 in path2 or path2 in path1
+
 
 def scenario_from_xml_to_json(xml, scen):
     scen_list = []
