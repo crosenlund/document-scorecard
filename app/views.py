@@ -278,14 +278,14 @@ def add_group():
             scen_id = request.json['scenID']
         group_name = request.json['newGroupName']
         qualifying_value = ''
-        if 'qualifyingField' in request.json:
-            qualifying_value = request.json['qualifyingField']
+        if 'newQualifyingField' in request.json:
+            qualifying_value = request.json['newQualifyingField']
         qualifying_field = ''
-        if 'qualifyingValue' in request.json:
-            qualifying_field = request.json['qualifyingValue']
+        if 'newQualifyingValue' in request.json:
+            qualifying_field = request.json['newQualifyingValue']
         requires_one = ''
-        if 'requires-one' in request.json:
-            requires_one = request.json['requires-one']
+        if 'newRequiresOne' in request.json:
+            requires_one = request.json['newRequiresOne']
 
         if scen_id:
             success = scenarios.add_group(scen_id, group_name, qualifying_value, qualifying_field, requires_one)
@@ -327,8 +327,7 @@ def edit_group():
         group_id = ''
         if 'groupID' in request.json:
             group_id = request.json['groupID']
-        group_name = request.json['newGroupName']
-        current_name = request.json['name']
+        group_name = request.json['name']
         qualifying_value = ''
         if 'qualifyingField' in request.json:
             qualifying_value = request.json['qualifyingField']
@@ -336,9 +335,9 @@ def edit_group():
         if 'qualifyingValue' in request.json:
             qualifying_field = request.json['qualifyingValue']
         requires_one = ''
-        if 'requires-one' in request.json:
-            requires_one = request.json['requires-one']
-
+        if 'requiresOne' in request.json:
+            requires_one = request.json['requiresOne']
+        print('request.json: ', request.json)
         success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field, requires_one)
 
         if success:

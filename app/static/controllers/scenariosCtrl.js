@@ -85,10 +85,14 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         scenID: result.scenario.scenId,
                         scenID2: $scope.selectedScenario.scenId, // this will be used to return any new json data to repopulate the scenario tree
                         //----------GROUP----------------------------------
-                        groupName: result.scenario.groupName,
-                        newGroupName: result.scenario.name,
+                        groupName: result.scenario.name,
+                        newGroupName: result.scenario.newGroupName,
                         qualifyingField: result.scenario.qualifyingField,
                         qualifyingValue: result.scenario.qualifyingValue,
+                        requiresOne: result.scenario.requiresOne,
+                        newQualifyingField: result.scenario.newQualifyingField,
+                        newQualifyingValue: result.scenario.newQualifyingValue,
+                        newRequiresOne: result.scenario.newRequiresOne,
                         groupID: result.scenario.groupId
                     }));
                 } else if (action.indexOf('Field') > -1) { //limits the jsonData being sent when performing an action for a field
@@ -97,8 +101,8 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         scenID: result.scenario.scenId,
                         scenID2: $scope.selectedScenario.scenId,
                         //----------GROUP----------------------------------
-                        groupName: result.scenario.groupName,
-                        newGroupName: result.scenario.name,
+                        groupName: $scope.selectedScenario.name,
+                        newGroupName: result.scenario.groupName,
                         groupID: result.scenario.groupId,
                         //----------FIELD----------------------------------
                         fieldName: result.scenario.fieldName,
@@ -118,12 +122,6 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         fulfillmentType: result.scenario.fulfillmenttype,
                         rootName: result.scenario.rootname,
                         scenName: result.scenario.name,
-                        oldScenName: $scope.selectedScenario.name,
-                        oldRootName: $scope.selectedScenario.rootname,
-                        oldSchema: $scope.selectedScenario.schema,
-                        oldDescription: $scope.selectedScenario.description,
-                        oldDocType: $scope.selectedScenario.doctype,
-                        oldFulfillmentType: $scope.selectedScenario.fulfillmenttype,
                         scenID: result.scenario.scenId,
                         scenID2: $scope.selectedScenario.scenId
                     }));
