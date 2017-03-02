@@ -6,7 +6,7 @@
         </div>
     </div>
     <script type="text/ng-template" id="scenarioView">
-        <div class="tree-node" title="{[ scenario.rootName ]}">
+        <div class="tree-node">
             <div class="tree-node-container">
                 <div ng-click="scenario.closeRoot = !scenario.closeRoot">
                     <div class="icon-container">
@@ -49,7 +49,7 @@
         </div>
     </script>
     <script type="text/ng-template" id="groupView">
-        <div class="tree-node" title="{[ group.name ]}">
+        <div class="tree-node">
             <div class="tree-node-container">
                 <div ng-click="group.expandedGroup = !group.expandedGroup">
                     <div class="icon-container">
@@ -63,8 +63,10 @@
                 </div>
                 <div class="btn-group" ng-class="{open: menuOpen == group.name + '-' + group.groupId}">
                     <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
-                            ng-click='openMenu(group.name + "-" + group.groupId)'><span
-                            class="fa fa-ellipsis-h"></span></button>
+                            ng-click='openMenu(group.name + "-" + group.groupId)'>
+                        <span class="fa fa-ellipsis-h">
+                        </span>
+                    </button>
                     <ul class="dropdown-menu" style="left: -120;">
                         <li>
                             <a class="no-border" title="add field"
@@ -105,7 +107,7 @@
         </div>
     </script>
     <script type="text/ng-template" id="fieldView">
-        <div class="tree-node" ng-hide="$parent.group.expandedGroup" title="{[ field.name ]}">
+        <div class="tree-node" ng-hide="$parent.group.expandedGroup" title="{[ field.data ]}">
             <div class="tree-node-container btn-group" ng-class="{open: menuOpen == field.name + '-' + field.fieldId}">
                 <div class="icon-container">
                     <i class="node-icon fa fa-file-o">
@@ -114,10 +116,10 @@
                 <div class="node-label">
                     {[ field.name ]}
                 </div>
+                <div class="btn-group" ng-class="{open: menuOpen == field.name + '-' + field.fieldId}">
                 <button class="btn transparent-button dropdown-toggle" data-toggle="dropdown"
                         ng-click='openMenu(field.name + "-" + field.fieldId)'>
-                    <span
-                            class="fa fa-ellipsis-h">
+                    <span class="fa fa-ellipsis-h">
                     </span>
                 </button>
                 <ul class="dropdown-menu" style="left: -120;">
@@ -138,6 +140,7 @@
                         </a>
                     </li>
                 </ul>
+                </div>
             </div>
         </div>
     </script>

@@ -21,6 +21,7 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     $scope.hideRightSearch = true;
     $scope.hideCreate = true;
     $scope.hideSchema = true;
+    $scope.hideFieldsView = true;
     $scope.hideFieldsTable = true;
     $scope.hideFieldsTextarea = true;
     $scope.hideCheckBox = true;
@@ -90,9 +91,9 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
         scenariosFactory.downloadScenario(scenarioName).success(function (data) {
             var blob = new Blob([data], {type: "attachment;charset=utf-8"});
             var fileDownload = angular.element('<a></a>');
-            var fileName = data.fileName;
+            // var fileName = data.fileName;
             fileDownload.attr('href', window.URL.createObjectURL(blob));
-            fileDownload.attr('download', scenario.name + '-field_list.txt');
+            fileDownload.attr('download', scenario.name + '.txt');
             fileDownload[0].click();
         });
     };

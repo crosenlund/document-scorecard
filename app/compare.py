@@ -16,7 +16,7 @@ def compare(files, scenarios_list, validate_data, validate_schema):
             schema = ''
             if validate_schema:
                 schema = scenarios.get_schema_name(scen_id)
-            scenario_xml, error = scenarios.to_xml(scen_id)
+            scenario_xml, error = scenarios.to_xml(scen_id, True)
             scenario_xml = scenario_xml.decode("utf-8")
             with open(app.config['UPLOAD_FOLDER'] + "/scen_to_compare.xml", 'w') as scen_file:
                 scen_file.write(scenario_xml)
@@ -180,6 +180,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
 
                 if file_qual_found:
                     file_sub_tree = sub_tree
+                    # make sure the field
 
                 # add missing qualified fields to the output file
                 if not file_qual_found:

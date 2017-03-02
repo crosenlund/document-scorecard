@@ -301,7 +301,7 @@ def get_info(id):
 
 
 # return a scenario as json, uses methods build_fields and build_fields
-def to_xml(id):
+def to_xml(id, with_attributes):
     start_time = time.time()
     print("---to_xml started %s  ---" % start_time)
 
@@ -313,8 +313,8 @@ def to_xml(id):
 
         root_name = row[6]
         root_node = etree.Element(root_name)
-        root_node = (build_fields_xml(cur, id, root_node, False))
-        root_node = (build_groups_xml(cur, id, root_node, False))
+        root_node = (build_fields_xml(cur, id, root_node, False, with_attributes))
+        root_node = (build_groups_xml(cur, id, root_node, False, with_attributes))
 
         close(cur, conn)
 
@@ -326,7 +326,7 @@ def to_xml(id):
 
 
 # return a scenario as json, uses methods build_fields and build_fields
-def to_element_tree(id):
+def to_element_tree(id, with_attributes):
     start_time = time.time()
     print("---to_xml started %s  ---" % start_time)
 
@@ -338,8 +338,8 @@ def to_element_tree(id):
 
         root_name = row[6]
         root_node = etree.Element(root_name)
-        root_node = (build_fields_xml(cur, id, root_node, False))
-        root_node = (build_groups_xml(cur, id, root_node, False))
+        root_node = (build_fields_xml(cur, id, root_node, False, with_attributes))
+        root_node = (build_groups_xml(cur, id, root_node, False, with_attributes))
 
         close(cur, conn)
 
@@ -351,7 +351,7 @@ def to_element_tree(id):
 
 
 # helper method building the groups in XML for the scenario
-def build_groups_xml(cur, id, add_to_group, group_fields):
+def build_groups_xml(cur, id, add_to_group, group_fields, with_attributes):
     if group_fields:
         cur.execute("SELECT child_group_id FROM groups_in_groups where parent_group_id = '" + str(id) + "'")
     else:
@@ -367,21 +367,22 @@ def build_groups_xml(cur, id, add_to_group, group_fields):
         group_info = cur.fetchone()
         group_name = group_info[1]
         group_node = etree.Element(group_name)
-        if group_info[2]:
-            group_node.set('qualifying-field', str(group_info[2]))
-        if group_info[3]:
-            group_node.set('qualifying-value', str(group_info[3]))
-        if group_info[4]:
-            group_node.set('requires-one', str(group_info[4]))
-        group_node = (build_fields_xml(cur, group_id, group_node, True))
-        group_node = (build_groups_xml(cur, group_id, group_node, True))
+        if with_attributes:
+            if group_info[2]:
+                group_node.set('qualifying-field', str(group_info[2]))
+            if group_info[3]:
+                group_node.set('qualifying-value', str(group_info[3]))
+            if group_info[4]:
+                group_node.set('requires-one', str(group_info[4]))
+        group_node = (build_fields_xml(cur, group_id, group_node, True, with_attributes))
+        group_node = (build_groups_xml(cur, group_id, group_node, True, with_attributes))
         add_to_group.append(group_node)
 
     return add_to_group
 
 
 # helper method building the fields in XML for the scenario
-def build_fields_xml(cur, id, group, group_field):
+def build_fields_xml(cur, id, group, group_field, with_attributes):
     if group_field:
         cur.execute("SELECT field_id FROM fields_in_groups where group_id = '" + str(id) + "'")
     else:
@@ -397,12 +398,14 @@ def build_fields_xml(cur, id, group, group_field):
         field_info = cur.fetchone()
         field_name = field_info[1]
         field_node = etree.Element(field_name)
-        field_node.set('score', str(field_info[2]))
         field_node.text = field_info[3]
-        if field_info[4]:
-            field_node.set('not_equal', str(field_info[4]))
-        if field_info[5]:
-            field_node.set('requires', str(field_info[5]))
+
+        if with_attributes:
+            field_node.set('score', str(field_info[2]))
+            if field_info[4]:
+                field_node.set('not-equal', str(field_info[4]))
+            if field_info[5]:
+                field_node.set('requires', str(field_info[5]))
         group.append(field_node)
     return group
 

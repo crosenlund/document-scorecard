@@ -106,7 +106,7 @@ def copy_scenario():
         success = False
 
         if not error:
-            scenario_data, error = scenarios.to_xml(scen_id)
+            scenario_data, error = scenarios.to_xml(scen_id, True)
             scen_info, errors = scenarios.get_info(scen_id)
             schema = scen_info[5]
             with open(app.config['UPLOAD_FOLDER'] + '/temp.xml', 'wb') as w:
@@ -165,12 +165,12 @@ def get_scenario_json():
         return scenario_json(scen_id)
 
 
-# returns json of a scenario
+# returns json of a scenario -- currently not being used?
 def scenario_json2(scen_id):
     scenario_data = ''
 
     if scenarios.existing_scenario(scen_id, None):
-        scenario_data, error = scenarios.to_xml(scen_id)
+        scenario_data, error = scenarios.to_xml(scen_id, True)
         scen_info, errors = scenarios.get_info(scen_id)
         schema = scen_info[5]
         with open(app.config['APP_FOLDER'] + '/temp.xml', 'wb') as w:
@@ -212,9 +212,13 @@ def get_scenario_xml():
         scen_id = request.json['id']
         scen_name = request.json['name']
         schema = request.json['schema']
+        if 'withAttributes' in request.json:
+            with_attributes = True
+        else:
+            with_attributes = ''
         # validate_to_schema = request.json['validateSchema']
         validate_to_schema = True
-        xml_string, error = scenarios.to_xml(scen_id)
+        xml_string, error = scenarios.to_xml(scen_id, with_attributes)
         with open(app.config['APP_FOLDER'] + '/output.xml', 'wb') as w:
             w.write(xml_string)
 
@@ -337,6 +341,8 @@ def edit_group():
         requires_one = ''
         if 'requiresOne' in request.json:
             requires_one = request.json['requiresOne']
+            if not requires_one:
+                requires_one = ''
         print('request.json: ', request.json)
         success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field, requires_one)
 

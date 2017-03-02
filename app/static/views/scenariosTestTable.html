@@ -32,12 +32,21 @@
     </tr>
  </tbody>
 </table>
-<ul class="disc" ng-hide="scenariosTestList != ''">
+<ul type="disc" ng-hide="scenariosTestList != ''">
    <h4>To run a test:</h4>
    <li>
       <span><h5>Add scenario(s) using (  <i class="fa fa-level-up fa-lg fa-rotate-90"></i>  )</h5></span>
    </li>
    <li>
-      <span><h5>Upload a test using (  <i class="fa fa-cloud-upload fa-lg"></i>  )</h5></span>
+      <span><h5>Upload test file(s) using (  <i class="fa fa-cloud-upload fa-lg"></i>  )</h5></span>
+   </li>
+   <li>
+      <span><h5>Run the test by selecting 'Test against...'</h5></span>
+        <ul type="circle">
+            <li>Data and Schema</li>
+            <li>Data</li>
+            <li>Schema</li>
+            <li>Neither (only field tags)</li>
+        </ul>
    </li>
 </ul>

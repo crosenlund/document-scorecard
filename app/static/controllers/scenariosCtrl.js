@@ -254,7 +254,8 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
         var scenarioName = (JSON.stringify({
             name: scenario.name,
             id: scenario.scenId,
-            schema: scenario.schema
+            schema: scenario.schema,
+            withAttributes: true
         }));
         scenariosFactory.downloadScenario(scenarioName).success(function (data) {
             var blob = new Blob([data], {type: "attachment;charset=utf-8"});
