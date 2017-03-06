@@ -1,7 +1,7 @@
 angular.module("myApp").controller("scenariosCtrl", scenariosCtrl);
 
-scenariosCtrl.$inject = ["$scope", "scenariosFactory", "groupsFactory", "fieldsFactory", "schemasFactory", "feedbackService", "$uibModal"];
-function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, schemasFactory, feedbackService, $uibModal) {
+scenariosCtrl.$inject = ["$scope", "scenariosFactory", "groupsFactory", "fieldsFactory", "schemasFactory", "xmlHelperFactory", "feedbackService", "$uibModal"];
+function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, schemasFactory, xmlHelperFactory, feedbackService, $uibModal) {
     //initiate local variables for tableCtrl
     $scope.scenarios = [];
     $scope.currentScenario = [];
@@ -118,9 +118,9 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         name: result.scenario.name,
                         schema: result.scenario.schema,
                         description: result.scenario.description,
-                        docType: result.scenario.doctype,
+                        docType: result.scenario.doctype || result.scenario.data.docType,
                         fulfillmentType: result.scenario.fulfillmenttype,
-                        rootName: result.scenario.rootname,
+                        rootName: result.scenario.rootname || result.scenario.data.rootName,
                         scenName: result.scenario.name,
                         scenID: result.scenario.scenId,
                         scenID2: $scope.selectedScenario.scenId
@@ -367,6 +367,47 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
                         .error(function (result, status) {
                             feedbackService.addMessage(result, status);
                         });
+                }
+            });
+        }
+    }
+
+    //XMLHelper functionality--------------------------------------------------
+    $scope.openXMLHelperModal = function () {
+        template = "views/modals/XMLHelper/modifyAttributesModal.tpl.html?bust=" + Math.random().toString(36).slice(2);
+
+        if (template != "") {
+            $uibModal.open({
+                templateUrl: template,
+                controller: 'xmlHelperCtrl'
+            }).result.then(function (result) { //this happens when the modal is closed, not dismissed
+
+                if (result.score) {
+                    var jsonData_modifyAttributes = (JSON.stringify({
+                        score: result.score
+                    }));
+                    if (result.file != null) {
+                        var fd = new FormData();
+                        var fileName = '';
+                        angular.forEach(result.file, function (file) {
+                            fileName = file.name;
+                            fd.append('file', file);
+                        });
+                        fd.append("data", jsonData_modifyAttributes);
+
+                        xmlHelperFactory.modifyAttributes(fd).success(function (data) {
+                            var blob = new Blob([data], {type: "attachment;charset=utf-8"});
+                            var fileDownload = angular.element('<a></a>');
+                            fileDownload.attr('href', window.URL.createObjectURL(blob));
+                            fileDownload.attr('download', fileName);
+                            fileDownload[0].click();
+                        })
+                            .error(function (result, status) {
+                                feedbackService.addMessage(result, status);
+                            });
+                    } else {//no file uploaded or other unforeseen error
+                        feedbackService.addMessage('Unable to modify attributes', '400');
+                    }
                 }
             });
         }

@@ -1,16 +1,34 @@
 //This controller is used for scenario and esp modals so variable 'scenario' will pass the groups and fields to manipulate as well
-angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$state', 'scenario', 'action', 'schemas',
-    function ($scope, $modalInstance, $state, scenario, action, schemas) {
+angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$filter', '$state', 'scenario', 'action', 'schemas',
+    function ($scope, $modalInstance, $filter, $state, scenario, action, schemas) {
         $scope.newScenario = angular.copy(scenario);
         $scope.scenario = scenario;
         $scope.schemas = schemas;
+        console.log($scope.newScenario.doctype);
         //holds the options for the drop down menus
-        $scope.docTypeOptions = ['810', '846', '850', '855', '856', 'Other'];
+        $scope.allData = [
+            {id: 810, docType: '810', rootName: 'Invoice'},
+            {id: 846, docType: '846', rootName: 'ItemRegistry'},
+            {id: 850, docType: '850', rootName: 'Order'},
+            {id: 855, docType: '855', rootName: 'OrderChange'},
+            {id: 856, docType: '856', rootName: 'Shipment'},
+            {id: 0, docType: 'Other', rootName: ''}
+        ];
+        //an enpty set to create the one line to use for the 'allData' set
+        $scope.data = [
+            {id: 1, docType: '', rootName: ''}
+        ];
+        // when editing a scenario, set the docType drop down to existing docType
+        $scope.data = $filter("filter")($scope.allData, {docType:$scope.newScenario.doctype});
+
+
         $scope.fulfillmentTypeOptions = ['Bulk Import', 'Drop Ship', 'Multi Store', 'Cross Dock', 'Multiple'];
+
         console.log(schemas);
-        console.log($scope.scenario)
+        console.log($scope.scenario);
 
         $scope.closeModal = function () {
+            $scope.newScenario.doctype = $scope.newScenario.data.docType;
             $modalInstance.close({scenario: $scope.newScenario, file: $scope.files, action: action});
         };
 

@@ -131,7 +131,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
         group_path = ''
 
         if 'score' not in scenario_node.attrib:  # group that may have children/fields
-            print(scenario_node.attrib)
+            # print(scenario_node.attrib)
             if 'qualifying-field' in scenario_node.attrib:
                 qual = str(scenario_node.attrib['qualifying-field'])
             if 'qualifying-value' in scenario_node.attrib:
@@ -146,10 +146,13 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
             if requires_one:
                 print(requires_one)
                 for field_set in requires_one:
+                    field_in_set_found = False
+                    node_score = 0
                     print(field_set)
                     fields = field_set.split(',')
                     for field in fields:
                         print(field)
+                        print('=====')
 
                         # mark the fields/groups with in this field set as visited, so we don't process again
                         scen_sub_tree = etree.ElementTree(scenario_node)
@@ -157,13 +160,23 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                             if node.tag == field:
                                 if 'visited' not in node.attrib or node.attrib['visited'] is not 'yes':
                                     node.attrib['visited'] = 'yes'
+                                    if 'score' in node.attrib and node_score < int(node.attrib['score']):
+                                        node_score = int(node.attrib['score'])
 
                         # determine if fields in this set are present in the group
                         for file_node in file_tree.iter(field):
                             file_node_path = utilities.clean_xml_path(file_tree.getpath(file_node))
+                            print(file_node_path)
                             if utilities.same_path(group_path + '/' + field, file_node_path):
                                 print(group_path + '/' + field)
                                 print(file_node_path)
+                                field_in_set_found = True
+
+                        if field_in_set_found:
+                            break
+
+                    if not field_in_set_found:
+                        missing_fields.append([node_score, " in %s: requires one of %s" % (group_path, fields)])
 
             if qual and value:
                 # if the qualifying field is with in a group within, get the other groups

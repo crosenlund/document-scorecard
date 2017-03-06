@@ -20,19 +20,20 @@
                            ng-model="newScenario.description">
                 </label>
             </div>
-            <div class="row">
+            <div class="row" ng-repeat="_data in data">
                 <div class="large-4 small-4 columns">
                     <label class="required">
                         Doc Type
-                        <select name="singleSelect" ng-model="newScenario.doctype">
-                            <option ng-repeat="docType in docTypeOptions" value="{[ docType ]}">{[ docType ]}</option>
-                        </select>
+
+                        <select ng-model="newScenario.data" ng-init="newScenario.data = data[0]"
+                                ng-options="data1.docType for data1 in allData track by data1.id"></select>
                     </label>
                 </div>
                 <div class="large-10 small-10 columns">
                     <label class="required">
                         Root Name
-                        <input ng-disabled="true" type="text" placeHolder="Root Name is required if file is not uploaded..."
+                        <input ng-disabled="true" type="text"
+                               placeHolder="Root Name is required if file is not uploaded..."
                                ng-model="newScenario.rootname">
                     </label>
                 </div>
@@ -70,7 +71,7 @@
         </li>
         <li>
             <button class="confirm" ng-click="closeModal()"
-                    ng-disabled="!newScenario.name || !newScenario.description || !newScenario.doctype">
+                    ng-disabled="!newScenario.name || !newScenario.description || !newScenario.data.docType">
                 Finish
             </button>
         </li>

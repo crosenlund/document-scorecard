@@ -1,8 +1,8 @@
 # from application.app import scenarios, app, parse, creator, utils
 import os
 import logging
-from app import app, scenarios, groups, fields, utilities, parse, creator, schemaUtilities, output, compare
-from flask import render_template, redirect, url_for, request, make_response, Response, json
+from app import app, scenarios, groups, fields, utilities, parse, creator, schemaUtilities, output, compare, XMLHelper
+from flask import render_template, send_from_directory, redirect, url_for, request, make_response, Response, json
 from werkzeug import secure_filename
 import time
 
@@ -475,3 +475,24 @@ def delete_schema():
     if len(error) > 0:
         return make_response(error, 400)
     return get_schema_list()
+
+
+# --------------------SCHEMA VALIDATION------------------------------------------
+@app.route('/modify_attributes', methods=['POST'])
+def modify_attributes():
+    if request.method == 'POST':
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        data = json.loads(request.form['data'])
+        score = data['score']
+        error = ''
+
+        if file and utilities.file_allowed(filename):
+            result, error = XMLHelper.add_scores(app.config['UPLOAD_FOLDER'] + '/' + filename, score)
+        else:
+            response = make_response("Ensure that a file was uploaded and is .txt or .xml", 400)
+            return response
+        response = make_response(result, 200)
+        response.headers["Content-Disposition"] = "attachment;filename=%s" % filename
+        return response

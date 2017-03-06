@@ -21,6 +21,7 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
     $scope.hideRightSearch = true;
     $scope.hideCreate = true;
     $scope.hideSchema = true;
+    $scope.hideModifyAttributesButton = true;
     $scope.hideFieldsView = true;
     $scope.hideFieldsTable = true;
     $scope.hideFieldsTextarea = true;

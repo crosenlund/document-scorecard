@@ -398,7 +398,10 @@ def build_fields_xml(cur, id, group, group_field, with_attributes):
         field_info = cur.fetchone()
         field_name = field_info[1]
         field_node = etree.Element(field_name)
-        field_node.text = field_info[3]
+        # default to empty string to ensure a closed xml tag when downloaded
+        field_node.text = ''
+        if field_info[3] is not None:
+            field_node.text = field_info[3]
 
         if with_attributes:
             field_node.set('score', str(field_info[2]))

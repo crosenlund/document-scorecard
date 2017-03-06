@@ -1,0 +1,55 @@
+<div id="modify-attributes-modal" class="reveal-modal open" data-reveal tabindex="0" aria-hidden="false"
+     style="display: block; opacity: 1; visibility: visible; top: 100px; max-height: 500px">
+    <header class="modal-title">
+        Create a field
+    </header>
+    Modify a file to include necessary attributes for creating a scenario
+    <form name="myForm">
+        <ul class="fa-ul">
+
+            <li>
+                <div class="droparea" drag-drop>
+                    <div class="row">
+                        <input type="file" ng-model-instant id="fileToUpload"
+                               onchange="angular.element(this).scope().setFiles(this)"/>
+                    </div>
+                    <div id="dropbox" ng-hide="files.length" class="dropbox"><span>{[dropText]}</span></div>
+                    <div ng-show="files.length">
+                        <div ng-repeat="file in files.slice(0)">
+                            <span>{[file.webkitRelativePath || file.name]}</span>
+                            (<span ng-switch="file.size > 1024*1024">
+                          <span ng-switch-when="true">{[file.size / 1024 / 1024 | number:2]} MB</span>
+                          <span ng-switch-default>{[file.size / 1024 | number:2]} kB</span>
+                      </span>)
+                        </div>
+                    </div>
+                </div>
+                <span style="font-size: .8em"><strong>Note</strong>: MUST be a valid XML file</span>
+            </li>
+            <li>
+                <div>
+                    <label class="required">
+                        Score
+                        <input type="number" name="score" placeHolder="enter a score..." ng-model="xmlHelper.score"
+                               ng-pattern="/^[1-5]$/">
+                    </label>
+                    <label ng-show="myForm.score.$invalid">
+                        Score must be in the range 1 - 5
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </form>
+    <ul class="form-actions">
+        <li>
+            <button class="button" ng-click="cancelModal()">Cancel</button>
+        </li>
+        <li>
+            <button class="confirm" ng-click="modifyAttributes()"
+                    ng-disabled="!xmlHelper.score || !files">
+                Finish
+            </button>
+        </li>
+    </ul>
+    <a class="close-reveal-modal" ng-click="cancelModal()">x</a>
+</div>
