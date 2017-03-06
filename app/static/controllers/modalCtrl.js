@@ -28,7 +28,9 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
         console.log($scope.scenario);
 
         $scope.closeModal = function () {
-            $scope.newScenario.doctype = $scope.newScenario.data.docType;
+            if ($scope.newScenario.data) {
+                $scope.newScenario.doctype = $scope.newScenario.data.docType;
+            }
             $modalInstance.close({scenario: $scope.newScenario, file: $scope.files, action: action});
         };
 
