@@ -12,9 +12,9 @@ CREATE TABLE fields_in_groups
     group_id INTEGER,
     field_id INTEGER,
     scenario_id INTEGER,
-    CONSTRAINT fields_in_groups_group_id_fkey FOREIGN KEY (group_id) REFERENCES groups (id),
-    CONSTRAINT fields_in_groups_field_id_fkey FOREIGN KEY (field_id) REFERENCES fields (id),
-    CONSTRAINT fields_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id)
+    CONSTRAINT fields_in_groups_group_id_fkey FOREIGN KEY (group_id) REFERENCES groups (id) on DELETE CASCADE,
+    CONSTRAINT fields_in_groups_field_id_fkey FOREIGN KEY (field_id) REFERENCES fields (id) on DELETE CASCADE,
+    CONSTRAINT fields_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id) on DELETE CASCADE
 );
 CREATE TABLE groups
 (
@@ -29,9 +29,9 @@ CREATE TABLE groups_in_groups
     scenario_id INTEGER,
     parent_group_id INTEGER,
     child_group_id INTEGER,
-    CONSTRAINT groups_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id),
-    CONSTRAINT groups_in_groups_group_id_fkey FOREIGN KEY (parent_group_id) REFERENCES groups (id),
-    CONSTRAINT groups_in_groups_child_group_id_fkey FOREIGN KEY (child_group_id) REFERENCES groups (id)
+    CONSTRAINT groups_in_groups_scenario_id_fkey FOREIGN KEY (scenario_id) REFERENCES scenarios (id) on DELETE CASCADE,
+    CONSTRAINT groups_in_groups_group_id_fkey FOREIGN KEY (parent_group_id) REFERENCES groups (id) on DELETE CASCADE,
+    CONSTRAINT groups_in_groups_child_group_id_fkey FOREIGN KEY (child_group_id) REFERENCES groups (id) on DELETE CASCADE
 );
 CREATE TABLE scenarios
 (

@@ -5,6 +5,10 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
         $scope.scenario = scenario;
         $scope.schemas = schemas;
         console.log($scope.newScenario.doctype);
+        //an empty set to create the one line to use for the 'allData' set
+        $scope.data = [
+            {id: 1, docType: '', rootName: ''}
+        ];
         //holds the options for the drop down menus
         $scope.allData = [
             {id: 810, docType: '810', rootName: 'Invoice'},
@@ -14,13 +18,10 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
             {id: 856, docType: '856', rootName: 'Shipment'},
             {id: 0, docType: 'Other', rootName: ''}
         ];
-        //an enpty set to create the one line to use for the 'allData' set
-        $scope.data = [
-            {id: 1, docType: '', rootName: ''}
-        ];
         // when editing a scenario, set the docType drop down to existing docType
-        $scope.data = $filter("filter")($scope.allData, {docType:$scope.newScenario.doctype});
-
+        if ($scope.newScenario.doctype) {
+            $scope.data = $filter("filter")($scope.allData, {docType: $scope.newScenario.doctype});
+        }
 
         $scope.fulfillmentTypeOptions = ['Bulk Import', 'Drop Ship', 'Multi Store', 'Cross Dock', 'Multiple'];
 
