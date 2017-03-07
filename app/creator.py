@@ -14,7 +14,6 @@ def build_scenario(scenario_info, scenario_data):
     schema_name = ''
     doc_type = ''
     date_created = ''
-    # print(scenario_info)
 
     # parsing the scenario_info so that we can add a scenario using the info later
     for (v, info) in scenario_info.items():
@@ -78,7 +77,6 @@ def find_root(root_name, scenario_data):
             for group in _groups:
                 for (v, info) in group.items():
                     if v == 'name':
-                        print(info)
                         if info == root_name:
                             logging.info("(find_root) found %s in %r", root_name, scenario_data)
                             return group

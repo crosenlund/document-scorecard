@@ -51,6 +51,8 @@ def upload_new_scenario():
         schema = ''
         if 'schema' in data:
             schema = data['schema']
+        print('schema:', schema)
+        print('schema:', schema)
 
         if file:
             if utilities.file_allowed(file.filename):
@@ -111,7 +113,6 @@ def copy_scenario():
             schema = scen_info[5]
             with open(app.config['UPLOAD_FOLDER'] + '/temp.xml', 'wb') as w:
                 w.write(scenario_data)
-
             if schema is not None:
                 schemaUtilities.order_xml(app.config['UPLOAD_FOLDER'] + '/temp.xml', schema)
 

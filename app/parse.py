@@ -82,7 +82,6 @@ def process_node(parent_node):
 
 # a helper method that builds groups for the scenario json data
 def build_group(node):
-    print(node.attrib)
     if 'qualifying-field' in node.attrib:
         qualifying_field = node.attrib['qualifying-field']
     else:

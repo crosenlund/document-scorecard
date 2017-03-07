@@ -4,11 +4,6 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
         $scope.newScenario = angular.copy(scenario);
         $scope.scenario = scenario;
         $scope.schemas = schemas;
-        console.log($scope.newScenario.doctype);
-        //an empty set to create the one line to use for the 'allData' set
-        $scope.data = [
-            {id: 1, docType: '', rootName: ''}
-        ];
         //holds the options for the drop down menus
         $scope.allData = [
             {id: 810, docType: '810', rootName: 'Invoice'},
@@ -19,6 +14,11 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
             {id: 0, docType: 'Other', rootName: ''}
         ];
         // when editing a scenario, set the docType drop down to existing docType
+
+        //an empty set to create the one line to use for the 'allData' set
+        $scope.data = [
+            {id: 1, docType: '', rootName: ''}
+        ];
         if ($scope.newScenario.doctype) {
             $scope.data = $filter("filter")($scope.allData, {docType: $scope.newScenario.doctype});
         }

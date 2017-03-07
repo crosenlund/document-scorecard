@@ -172,9 +172,10 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                                 print(file_node_path)
                                 field_in_set_found = True
 
-                        if field_in_set_found:
-                            break
+                    if field_in_set_found:
+                        actual_score += node_score
 
+                    total_score += node_score
                     if not field_in_set_found:
                         missing_fields.append([node_score, " in %s: requires one of %s" % (group_path, fields)])
 
@@ -226,6 +227,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
             scenario_node_text = scenario_node.text
             node_score = int(scenario_node.attrib['score'])  # every field has to have a score
             total_score += node_score
+            print("%s: %s" % (scenario_node.tag, scenario_node.attrib))
 
             node_found = False
             path_present = False
@@ -239,9 +241,12 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                     # logic for when validating data, not_equals
                     if validate_data:
                         path_present = True
-                        if 'not_equal' in scenario_node.attrib and scenario_node.attrib['not_equal']:
+                        print("not_equal--")
+                        if 'not-equal' in scenario_node.attrib and scenario_node.attrib['not-equal']:
                             node_found = True
+                            print("not_equal0")
                             if file_node.text == scenario_node_text:
+                                print("not_equal")
                                 not_equal = False
                         elif file_node.text == scenario_node_text:
                             node_found = True
@@ -251,6 +256,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                         node_found = True
 
             if not not_equal:
+                print("not_equal1")
                 missing_data.append([node_score,
                                      beginning_path + scenario_node_path + " (expected data not equal to: %s)" % scenario_node_text])
             elif path_present and not node_found:
