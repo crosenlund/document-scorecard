@@ -28,7 +28,6 @@ def compare(files, scenarios_list, validate_data, validate_schema):
                     errors += 'Compare.process_file getting scen_to_compare.xml'
             for file in files:
                 if utilities.file_allowed(file):
-                    print('processing scenario: ', scenario)
                     scenario_results.append(process_file(file, scen_tree, validate_data, validate_schema, schema))
                 else:
                     errors += "Unable to retrieve file '" + file.name + "' because of invalid extension."
@@ -41,7 +40,6 @@ def compare(files, scenarios_list, validate_data, validate_schema):
 
 
 def process_file(file, scen_tree, validate_data, validate_schema, schema):
-    print('processing file: ', file)
     results = []
     file_results = {}
     missing_data = []
@@ -58,9 +56,7 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                 if '}' in node.tag:  # remove name space if present
                     node.tag = node.tag.split("}")[1][0:]
 
-            print('processing file1: ', file)
         except XMLSyntaxError as e:
-            print('processing file error: ', file)
             error = 'There was a problem parsing %s: %s' % (file, e)
             errors.append(error)
             file_results['errors'] = errors
@@ -234,7 +230,6 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
             for file_node in file_tree.iter(scenario_node.tag):
                 file_node_path = utilities.clean_xml_path(file_tree.getpath(file_node))
                 if utilities.same_path(scenario_node_path, file_node_path):
-                    # print(scenario_node.attrib)
 
                     # logic for when validating data, not_equals
                     if validate_data:
@@ -243,7 +238,8 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                             node_found = True
                             if file_node.text == scenario_node_text:
                                 not_equal = False
-                        elif file_node.text == scenario_node_text:
+                                # do not validate logic when scenario field does not have data.
+                        elif file_node.text == scenario_node_text or scenario_node_text is None or scenario_node_text == '':
                             node_found = True
                         else:
                             continue
@@ -254,8 +250,10 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                 missing_data.append([node_score,
                                      beginning_path + scenario_node_path + " (expected data not equal to: %s)" % scenario_node_text])
             elif path_present and not node_found:
-                missing_data.append(
-                    [node_score, beginning_path + scenario_node_path + " (expected data: %s)" % scenario_node_text])
+                text = beginning_path + scenario_node_path
+                if scenario_node_text is not None:
+                    text += " (expected data: %s)" % scenario_node_text
+                missing_data.append([node_score, text])
             elif not node_found:
                 missing_fields.append([node_score, beginning_path + scenario_node_path])
             else:
@@ -268,6 +266,7 @@ def missing_component(_list, score, name):
     return _list.append([score, name])
 
 
+# utility to help find nested qualifying gorups/fields
 def find_qualifier(file_sub_tree, scenario_node_tag, qual_groups, qual_field, value, scenario_node_path):
     for file_node in file_sub_tree.iter(scenario_node_tag):
         if qual_groups:

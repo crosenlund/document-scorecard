@@ -253,7 +253,6 @@ def compare_download():
         scen_name = 'multi'
         if len(scenarios_list) == 1:
             scen_name = scenarios_list[0]
-        error = ''
 
         if files and selected_list:
             results = compare.compare(files, scenarios_list, validate_to_data, validate_to_schema)

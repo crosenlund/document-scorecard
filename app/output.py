@@ -15,7 +15,6 @@ def format_text(results, v_data, v_schema, for_download):
                     if 'file_name' in info:
                         output_string += 'Results for: %s\r\n' % info['file_name']
                         output_string += '------------------------------\r\n\r\n'
-                        print(info)
 
                     if 'total_score' in info and 'actual_score' in info:
                         score_percent = 0.0
