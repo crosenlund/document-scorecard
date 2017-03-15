@@ -65,7 +65,7 @@ def order_xml(xmlfile, schema_name):
     layout_name = schema_name.replace('.', '-')
     try:
         layouts_path = app.config['SCHEMA_LAYOUTS_FOLDER']
-        doc = check_output('python %s/%s.py %s' % (layouts_path, layout_name, xmlfile))
+        doc = check_output('python %s/%s.py %s' % (layouts_path, layout_name, xmlfile), shell=True)
         w = open(app.config['APP_FOLDER'] + '/output.xml', 'wb')
         w.write(doc)
         w.close()

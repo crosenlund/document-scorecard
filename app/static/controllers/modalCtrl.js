@@ -9,8 +9,9 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
             {id: 810, docType: '810', rootName: 'Invoice'},
             {id: 846, docType: '846', rootName: 'ItemRegistry'},
             {id: 850, docType: '850', rootName: 'Order'},
-            {id: 855, docType: '855', rootName: 'OrderChange'},
+            {id: 855, docType: '855', rootName: 'OrderAck'},
             {id: 856, docType: '856', rootName: 'Shipment'},
+            {id: 860, docType: '860', rootName: 'OrderChange'},
             {id: 0, docType: 'Other', rootName: ''}
         ];
         // when editing a scenario, set the docType drop down to existing docType
@@ -23,7 +24,7 @@ angular.module('myApp').controller('modalCtrl', ['$scope', '$modalInstance', '$f
             $scope.data = $filter("filter")($scope.allData, {docType: $scope.newScenario.doctype});
         }
 
-        $scope.fulfillmentTypeOptions = ['Bulk Import', 'Drop Ship', 'Multi Store', 'Cross Dock', 'Multiple'];
+        $scope.fulfillmentTypeOptions = ['Bulk Import', 'Cross Dock', 'Drop Ship', 'Multi Store', 'Multiple', 'Vendor Managed Inventory'];
 
         console.log(schemas);
         console.log($scope.scenario);

@@ -15,19 +15,19 @@ def format_text(results, v_data, v_schema, for_download):
                     if 'file_name' in info:
                         output_string += 'Results for: %s\r\n' % info['file_name']
                         output_string += '------------------------------\r\n\r\n'
+                        print(info)
 
                     if 'total_score' in info and 'actual_score' in info:
+                        score_percent = 0.0
                         try:
                             int(info['total_score'])
-                        except ValueError:
-                            continue
-                        try:
                             int(info['actual_score'])
+                            score_percent = round((info['actual_score'] / info['total_score']) * 100, 2)
                         except ValueError:
-                            continue
-                        score = round((info['actual_score'] / info['total_score']) * 100, 2)
+                            None
+
                         output_string += 'Score earned: %r/%r, %r%%\r\n\r\n' % (
-                            info['actual_score'], info['total_score'], score)
+                            info['actual_score'], info['total_score'], score_percent)
 
                     if 'missing_fields' in info and info['missing_fields']:
                         output_string += '---Missing Fields---\r\n'
@@ -45,6 +45,12 @@ def format_text(results, v_data, v_schema, for_download):
                         output_string += '---Field Not in Schema---\r\n'
                         for field in info['not_in_schema']:
                             output_string += 'Missing %s \r\n' % field
+                        output_string += '\r\n'
+
+                    if 'errors' in info and info['errors']:
+                        output_string += '---Errors processing---\r\n'
+                        for error in info['errors']:
+                            output_string += 'Error: %s \r\n' % error
                         output_string += '\r\n'
 
                     if 'missing_fields' in info and not info['missing_fields'] and 'not_in_schema' in info and not info[

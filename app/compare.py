@@ -28,6 +28,7 @@ def compare(files, scenarios_list, validate_data, validate_schema):
                     errors += 'Compare.process_file getting scen_to_compare.xml'
             for file in files:
                 if utilities.file_allowed(file):
+                    print('processing scenario: ', scenario)
                     scenario_results.append(process_file(file, scen_tree, validate_data, validate_schema, schema))
                 else:
                     errors += "Unable to retrieve file '" + file.name + "' because of invalid extension."
@@ -40,11 +41,13 @@ def compare(files, scenarios_list, validate_data, validate_schema):
 
 
 def process_file(file, scen_tree, validate_data, validate_schema, schema):
+    print('processing file: ', file)
     results = []
     file_results = {}
     missing_data = []
     missing_fields = []
     not_in_schema = []
+    errors = []
 
     # get data from file as lxml etree
     with open(app.config['UPLOAD_FOLDER'] + "/" + file) as xml_file:
@@ -55,11 +58,13 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                 if '}' in node.tag:  # remove name space if present
                     node.tag = node.tag.split("}")[1][0:]
 
-        except XMLSyntaxError:
-            errors = 'There was a problem parsing %s. Please report a bug if issue cannot be resolved from the' \
-                     ' following: ( TODO: insert web link to help page)' % file
-            results.append({'errors': errors})
-            return results
+            print('processing file1: ', file)
+        except XMLSyntaxError as e:
+            print('processing file error: ', file)
+            error = 'There was a problem parsing %s: %s' % (file, e)
+            errors.append(error)
+            file_results['errors'] = errors
+            return file_results
 
     # copy trees for use and manipulation
     scen_tree_copy = scen_tree
@@ -87,7 +92,7 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                 except XMLSyntaxError:
                     errors = 'There was a problem validating against the schema for %s. If this does not resolve,' \
                              ' please report a bug/issue' % file
-                    results.append({'errors': errors})
+                    errors.append(errors)
                     return results
 
                 for file_node in file_tree.iter():
@@ -111,6 +116,7 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
     file_results['missing_fields'] = missing_fields
     file_results['missing_data'] = missing_data
     file_results['not_in_schema'] = not_in_schema
+    file_results['errors'] = errors
     results.append(file_results)
     return file_results
 
@@ -144,15 +150,11 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
             # allowing for multiple sets of fields to be delimited by pipe |
             # and then delimited by comma , within the set of fields
             if requires_one:
-                print(requires_one)
                 for field_set in requires_one:
                     field_in_set_found = False
                     node_score = 0
-                    print(field_set)
                     fields = field_set.split(',')
                     for field in fields:
-                        print(field)
-                        print('=====')
 
                         # mark the fields/groups with in this field set as visited, so we don't process again
                         scen_sub_tree = etree.ElementTree(scenario_node)
@@ -166,10 +168,7 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                         # determine if fields in this set are present in the group
                         for file_node in file_tree.iter(field):
                             file_node_path = utilities.clean_xml_path(file_tree.getpath(file_node))
-                            print(file_node_path)
                             if utilities.same_path(group_path + '/' + field, file_node_path):
-                                print(group_path + '/' + field)
-                                print(file_node_path)
                                 field_in_set_found = True
 
                     if field_in_set_found:
@@ -227,7 +226,6 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
             scenario_node_text = scenario_node.text
             node_score = int(scenario_node.attrib['score'])  # every field has to have a score
             total_score += node_score
-            print("%s: %s" % (scenario_node.tag, scenario_node.attrib))
 
             node_found = False
             path_present = False
@@ -241,12 +239,9 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                     # logic for when validating data, not_equals
                     if validate_data:
                         path_present = True
-                        print("not_equal--")
                         if 'not-equal' in scenario_node.attrib and scenario_node.attrib['not-equal']:
                             node_found = True
-                            print("not_equal0")
                             if file_node.text == scenario_node_text:
-                                print("not_equal")
                                 not_equal = False
                         elif file_node.text == scenario_node_text:
                             node_found = True
@@ -256,7 +251,6 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
                         node_found = True
 
             if not not_equal:
-                print("not_equal1")
                 missing_data.append([node_score,
                                      beginning_path + scenario_node_path + " (expected data not equal to: %s)" % scenario_node_text])
             elif path_present and not node_found:

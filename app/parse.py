@@ -25,6 +25,7 @@ def new_scenario(file_name):
     # go through all the fields in the document to check for scores, if missing or invalid - err
     nodes = data_tree.iter()
     for node in nodes:
+        print(node.attrib)
         if len(node) < 1:  # this is a leaf node, or a field
             if 'score' in node.attrib:
                 score_is_number = False

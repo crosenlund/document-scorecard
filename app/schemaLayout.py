@@ -90,14 +90,17 @@ def create_schema_layout(xsd, schema_name):
     _super = string_o
     xsd_name = xsd
     generateDS_path = app.config['GENERATEDS_FOLDER']
+    generateDS = "%s/generateDS.py" % generateDS_path
+    supertag =  '--super="%s"' % _super
     print(generateDS_path)
     print(_object)
     print(xsd_name)
 
     try:
         import subprocess
+        # print(subprocess.Popen([generateDS, "-f", "-o", _object, "-s", sub_object,  supertag, xsd_name], stdout=subprocess.PIPE))
         print(subprocess.call('python %s/generateDS.py -f -o %s -s %s --super="%s" %s'
-                              % (generateDS_path, _object, sub_object, _super, xsd_name)))
+                              % (generateDS_path, _object, sub_object, _super, xsd_name), shell=True))
     except OSError as e:
         logging.info("SchemaCreation.py: there was an issue with creating the schema layout (schemaLayout.py)")
     return True

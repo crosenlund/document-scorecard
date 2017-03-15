@@ -51,8 +51,6 @@ def upload_new_scenario():
         schema = ''
         if 'schema' in data:
             schema = data['schema']
-        print('schema:', schema)
-        print('schema:', schema)
 
         if file:
             if utilities.file_allowed(file.filename):
@@ -478,7 +476,7 @@ def delete_schema():
     return get_schema_list()
 
 
-# --------------------SCHEMA VALIDATION------------------------------------------
+# ---------------------XML file helper--------------------------------------------
 @app.route('/modify_attributes', methods=['POST'])
 def modify_attributes():
     if request.method == 'POST':
