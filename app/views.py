@@ -1,7 +1,8 @@
 # from application.app import scenarios, app, parse, creator, utils
 import os
 import logging
-from app import app, scenarios, groups, fields, utilities, parse, creator, schemaUtilities, output, compare, XMLHelper
+from app import app, scenarios, groups, fields, utilities, parse
+from app import creator, schemaUtilities, output, compare, XMLHelper, consolidation
 from flask import render_template, send_from_directory, redirect, url_for, request, make_response, Response, json
 from werkzeug import secure_filename
 import time
@@ -341,7 +342,6 @@ def edit_group():
             requires_one = request.json['requiresOne']
             if not requires_one:
                 requires_one = ''
-        print('request.json: ', request.json)
         success = groups.edit_group(group_id, group_name, qualifying_value, qualifying_field, requires_one)
 
         if success:
@@ -493,4 +493,27 @@ def modify_attributes():
             return response
         response = make_response(result, 200)
         response.headers["Content-Disposition"] = "attachment;filename=%s" % filename
+        return response
+
+
+@app.route('/consolidate_XML', methods=['POST'])
+def consolidate_XML():
+    if request.method == 'POST':
+        selected_list = request.json['testList']
+        scenarios_list = selected_list.split(',')
+        root_name = scenarios.get_root_name(scenarios_list[0])
+        print(root_name)
+        if scenarios_list:
+            for scenario in scenarios_list:
+                print(scenarios.get_root_name(scenario))
+                if root_name != scenarios.get_root_name(scenario):
+                    response = make_response("All selected scenarios must be of the same document type", 400)
+                    return response
+        else:
+            response = make_response("Unable to find files and/or scenarios selected", 500)
+            return response
+
+        results = consolidation.consolidate_scenarios(scenarios_list)
+        response = make_response(results, 200)
+        response.headers["Content-Disposition"] = "attachment;filename=consolidated.xml"
         return response

@@ -7,9 +7,10 @@ def connect_to_db():
     # Connect to an existing database
     try:
         #use this on the server
-        # conn = psycopg2.connect("dbname=dsc")
+        db_connect = "dbname=dsc"
         #use this on local host, will have to create the tables using DSC_database.txt and adjust this line accordingly
-        conn = psycopg2.connect("dbname=postgres user=postgres password=postgres port=5433")
+        db_connect = "dbname=postgres user=postgres password=postgres port=5433"
+        conn = psycopg2.connect(db_connect)
     except:
         logging.info("unable to connect to the requested database, please review and try again")
         exit()

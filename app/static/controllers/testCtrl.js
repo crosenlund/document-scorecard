@@ -1,7 +1,7 @@
 angular.module("myApp").controller("testCtrl", testCtrl);
 
-testCtrl.$inject = ["$scope", "scenariosFactory", "feedbackService", "$uibModal"];
-function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
+testCtrl.$inject = ["$scope", "scenariosFactory", "xmlHelperFactory", "feedbackService", "$uibModal"];
+function testCtrl($scope, scenariosFactory, xmlHelperFactory, feedbackService, $uibModal) {
     //initiate local variables for tableCtrl
     $scope.scenarios = [];
     $scope.selectedScenario = [];
@@ -171,5 +171,24 @@ function testCtrl($scope, scenariosFactory, feedbackService, $uibModal) {
             }
         });
         $scope.testList = stringList;
+    }
+
+    $scope.consolidateXML = function () {
+        console.log('consolidateXML');
+        var data = (JSON.stringify({
+            testList: $scope.testList
+        }));
+        xmlHelperFactory.consolidateXML(data).success(function (data) {
+            var blob = new Blob([data], {type: "attachment;charset=utf-8"});
+            var fileDownload = angular.element('<a></a>');
+            // var fileName = data.fileName;
+            fileDownload.attr('href', window.URL.createObjectURL(blob));
+            fileDownload.attr('download', 'consolidated.xml');
+            fileDownload[0].click();
+        })
+            .error(function (result, status) {
+                                feedbackService.addMessage(result, status);
+                                console.log('error code: ' + status + '-' + result);
+                            });
     }
 }

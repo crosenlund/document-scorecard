@@ -7,3 +7,4 @@ app/SCHEMA_LAYOUTS/*.py
 tests
 __pycache__
 /sh.exe.stackdump
+unit_tests

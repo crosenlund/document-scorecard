@@ -284,6 +284,16 @@ def get_schema_name(id):
     return row
 
 
+# return the id of a scenario when given the name
+def get_root_name(id):
+    cur, conn = connect_to_db()
+    cur.execute("SELECT root_name FROM scenarios where name = '" + str(id) + "'")
+
+    row = cur.fetchone()[0]
+
+    return row
+
+
 # get the scenarios info
 def get_info(id):
     cur, conn = connect_to_db()

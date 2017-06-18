@@ -86,9 +86,9 @@ def process_file(file, scen_tree, validate_data, validate_schema, schema):
                 try:
                     schema_tree = etree.parse(schema_file, parsing)
                 except XMLSyntaxError:
-                    errors = 'There was a problem validating against the schema for %s. If this does not resolve,' \
+                    error = 'There was a problem validating against the schema for %s. If this does not resolve,' \
                              ' please report a bug/issue' % file
-                    errors.append(errors)
+                    errors.append(error)
                     return results
 
                 for file_node in file_tree.iter():
@@ -133,7 +133,6 @@ def process_nodes(scen_tree, file_tree, validate_data, missing_data, missing_fie
         group_path = ''
 
         if 'score' not in scenario_node.attrib:  # group that may have children/fields
-            # print(scenario_node.attrib)
             if 'qualifying-field' in scenario_node.attrib:
                 qual = str(scenario_node.attrib['qualifying-field'])
             if 'qualifying-value' in scenario_node.attrib:
@@ -276,10 +275,8 @@ def find_qualifier(file_sub_tree, scenario_node_tag, qual_groups, qual_field, va
                                                        scenario_node_path + "/" + scenario_node_tag)
 
             if file_qual_found:
-                # return the orginal sub tree so we can finish processing now that we could the correct qualified group
+                # return the orginal sub tree so we can finish processing now that we found the correct qualified group
                 return True, file_sub_tree
-            else:
-                return False, None
 
         file_node_path = utilities.clean_xml_path(file_sub_tree.getpath(file_node))
         if utilities.same_path(scenario_node_path, file_node_path):
@@ -288,5 +285,4 @@ def find_qualifier(file_sub_tree, scenario_node_tag, qual_groups, qual_field, va
                 if qual_field == temp_node.tag and value == temp_node.text:
                     file_sub_tree = etree.ElementTree(file_node)
                     return True, file_sub_tree
-
     return False, None

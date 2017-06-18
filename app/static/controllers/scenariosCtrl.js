@@ -21,6 +21,7 @@ function scenariosCtrl($scope, scenariosFactory, groupsFactory, fieldsFactory, s
     $scope.hideTestTable = true;
     $scope.hideFieldsView = false;
     $scope.hideFieldsViewWindow = true;
+    $scope.hideConsolidateButton = true;
     $scope.hideFieldsTextarea = true;
     $scope.hideExpandCollapse = true;
     $scope.expandAll = false;

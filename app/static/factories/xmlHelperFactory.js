@@ -9,6 +9,9 @@ angular.module("myApp").factory('xmlHelperFactory', ['$http', function ($http) {
                     }
                 }
             )
+        },
+        consolidateXML: function (data) {
+            return $http.post("consolidate_XML", data)
         }
     };
 }]);

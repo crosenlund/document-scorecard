@@ -22,7 +22,7 @@ versions.sort(key=semantic_version.Version, reverse=True)
 
 current_version = tags[0] if len(tags) else release_version
 
-ignore = ['local', 'get-tools.py', 'requirements.pip', 'setup.py', 'test.py', 'node_modules', 'coverage', 'karma.conf.js']
+ignore = ['local', 'get-tools.py', 'requirements.pip', 'setup.py', 'test_consolidation.py', 'node_modules', 'coverage', 'karma.conf.js']
 
 # we do not want to deploy pull requests
 if os.environ.get("TRAVIS") == "true" and os.environ.get("TRAVIS_PULL_REQUEST") == "false":

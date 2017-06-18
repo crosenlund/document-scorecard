@@ -60,6 +60,13 @@
             Adjust attributes
         </button>
     </div>
+    <div class="input-group input-group-sm" ng-hide="hideConsolidateButton">
+        <button class="button" ng-click="consolidateXML()" title="Consolidate selected scenarios"
+            ng-disabled="scenariosTestList.length < 2">
+            <i class="fa fa-book"></i>
+            Consolidate XML
+        </button>
+    </div>
 </div>
 <div class="toolbar-right">
   <span class="table-actions">
