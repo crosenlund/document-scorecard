@@ -90,10 +90,10 @@ def format_text(results, v_data, v_schema, for_download):
 
                     if 'missing_fields' in info and not info['missing_fields'] and 'not_in_schema' in info and not info[
                         'not_in_schema'] and 'missing_data' in info and not info['missing_data']:
-                        output_string += 'No missing fields, data, or qualifiers for this scenario and file'
+                        output_string += 'No missing fields, data, or qualifiers for this scenario and file\r\n'
 
                     if design_score_string:
-                        output_string += '\r\n---Design Score---\r\n'
+                        output_string += '\r\n---Use for Design Score Validation---\r\n'
                         output_string += design_score_string
 
                     output_string += '\r\n'
